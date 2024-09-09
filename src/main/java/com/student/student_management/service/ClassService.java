@@ -50,6 +50,7 @@ public class ClassService {
         classRepository.save(classRes);
         return new ApiResponse<>("Class with id "+ id +" is deleted", classRes, HttpStatus.OK);
     }
+
     @Transactional
     public ApiResponse<ClassModel> updateClassById(Long id, ClassModel classBody) {
         Optional<ClassModel> classOptional = findClassById(id);

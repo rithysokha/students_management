@@ -32,11 +32,13 @@ public class ClassController {
         ApiResponse<ClassModel> response = classService.createClass(classBody);
         return new ResponseEntity<>(response, response.status());
     }
+
     @DeleteMapping("{id}")
     public ResponseEntity<ApiResponse<ClassModel>> deleteClass(@PathVariable Long id){
         ApiResponse<ClassModel> response = classService.deleteClassById(id);
         return new ResponseEntity<>(response, response.status());
     }
+
     @PutMapping("{id}")
     public ResponseEntity<ApiResponse<ClassModel>> updateClassById(@PathVariable Long id, ClassModel classBody){
         ApiResponse<ClassModel> response = classService.updateClassById(id, classBody);
