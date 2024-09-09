@@ -15,13 +15,13 @@ public class ClassModel {
     private Long id;
     @Column(name = "class_name", length = 20, nullable = false, unique = true)
     private String className;
-    @Column(name = "department_id")
+    @Column(name = "department_id", nullable = false)
     @JsonBackReference
     private Long departmentId;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
-    private LocalDateTime udatedAt;
-    @Column(name = "deletd_at")
+    private LocalDateTime updatedAt;
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 }

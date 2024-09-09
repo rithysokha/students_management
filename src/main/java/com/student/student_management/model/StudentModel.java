@@ -18,12 +18,12 @@ public class StudentModel {
     private String lastName;
     @Column(name = "date_of_birth", nullable = false)
     private LocalDate dateOfBirth;
-    @Column(name = "address", length = 255, nullable = false)
+    @Column(name = "address", nullable = false)
     private String address;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
-    private LocalDateTime udatedAt;
+    private LocalDateTime updatedAt;
     @Column(name = "deletd_at")
     private LocalDateTime deletedAt;
 }

@@ -39,7 +39,7 @@ public class StudentController {
    }
 
    @PutMapping("{id}")
-   public ResponseEntity<ApiResponse<StudentModel>> updateStudentById(@PathVariable Long id, StudentModel studentBody){
+   public ResponseEntity<ApiResponse<StudentModel>> updateStudentById(@PathVariable Long id, @RequestBody StudentModel studentBody){
       ApiResponse<StudentModel> response = studentService.updateStudentById(id, studentBody);
       return new ResponseEntity<>(response, response.status());
    }

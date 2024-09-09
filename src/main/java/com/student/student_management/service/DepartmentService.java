@@ -61,7 +61,7 @@ public class DepartmentService {
         if(departmentBody.getDepartmentName() != null && !departmentBody.getDepartmentName().isEmpty()){
             departmentRes.setDepartmentName(departmentBody.getDepartmentName());
         }
-        departmentRes.setUdatedAt(LocalDateTime.now());
+        departmentRes.setUpdatedAt(LocalDateTime.now());
         departmentRepository.save(departmentRes);
         return new ApiResponse<>("Department updated", departmentRes, HttpStatus.OK);
     }

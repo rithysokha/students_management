@@ -51,7 +51,7 @@ public class StudentService {
         StudentModel studentResponse =studentOptional.get();
         studentResponse.setDeletedAt(LocalDateTime.now());
         studentRepository.save(studentResponse);
-        return new ApiResponse<>("Student delted", null, HttpStatus.OK);
+        return new ApiResponse<>("Student deleted", null, HttpStatus.OK);
     }
 
     @Transactional
@@ -72,6 +72,7 @@ public class StudentService {
         if(studentBody.getDateOfBirth() != null){
             studentResponse.setDateOfBirth(studentBody.getDateOfBirth());
         }
+        studentResponse.setUpdatedAt(LocalDateTime.now());
         return new ApiResponse<>("Student updated",studentRepository.save(studentResponse), HttpStatus.OK);
     }
 }

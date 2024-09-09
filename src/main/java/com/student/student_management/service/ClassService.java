@@ -17,17 +17,15 @@ import java.util.Optional;
 public class ClassService {
     private final ClassRepository classRepository;
 
-    private Optional<ClassModel> findClassById(Long id){
-        return classRepository.findById(id);
-    }
+    
     public ApiResponse<List<ClassModel>> getAllClasses() {
         return new ApiResponse<>("All classes", classRepository.findAllByDeletedAtIsNull(), HttpStatus.OK);
     }
 
     public ApiResponse<ClassModel> getOneClassById(Long id) {
-        Optional<ClassModel> classOptional = findClassById(id);
+        Optional<ClassModel> classOptional = classRepository.findById(id);
         return classOptional.map(classModel
-                -> new ApiResponse<>("Class with id " + id, classModel, HttpStatus.OK)).orElseGet(()
+                -> new ApiResponse<>("Class found", classModel, HttpStatus.OK)).orElseGet(()
                 -> new ApiResponse<>("Class not found", null, HttpStatus.NOT_FOUND));
     }
 
@@ -43,26 +41,30 @@ public class ClassService {
     }
 
     public ApiResponse<ClassModel> deleteClassById(Long id) {
-        Optional<ClassModel> classOptional = findClassById(id);
-        if(classOptional.isEmpty()) return new ApiResponse<>("Class not found", null, HttpStatus.NOT_FOUND);
-        ClassModel classRes = classOptional.get();
+        ApiResponse<ClassModel> classResponse = getOneClassById(id);
+        if (classResponse.status() != HttpStatus.OK) {
+            return classResponse;
+        }
+        ClassModel classRes = classResponse.data();
         classRes.setDeletedAt(LocalDateTime.now());
         classRepository.save(classRes);
-        return new ApiResponse<>("Class with id "+ id +" is deleted", classRes, HttpStatus.OK);
+        return new ApiResponse<>("Class with id " + id + " is deleted", classRes, HttpStatus.OK);
     }
 
     @Transactional
     public ApiResponse<ClassModel> updateClassById(Long id, ClassModel classBody) {
-        Optional<ClassModel> classOptional = findClassById(id);
-        if(classOptional.isEmpty()) return new ApiResponse<>("Class not found", null, HttpStatus.NOT_FOUND);
-        ClassModel classRes = classOptional.get();
-        if(classBody.getClassName()!= null && !classBody.getClassName().isEmpty()){
+        ApiResponse<ClassModel> classResponse = getOneClassById(id);
+        if (classResponse.status() != HttpStatus.OK) {
+            return classResponse;
+        }
+        ClassModel classRes = classResponse.data();
+        if (classBody.getClassName() != null && !classBody.getClassName().isEmpty()) {
             classRes.setClassName(classBody.getClassName());
         }
-        if(classBody.getDepartmentId()!=null){
+        if (classBody.getDepartmentId() != null) {
             classRes.setDepartmentId(classBody.getDepartmentId());
         }
-        classRes.setUdatedAt(LocalDateTime.now());
+        classRes.setUpdatedAt(LocalDateTime.now());
         classRepository.save(classRes);
         return new ApiResponse<>("Class updated", classRes, HttpStatus.OK);
     }
