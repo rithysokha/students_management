@@ -34,17 +34,16 @@ public class ClassService {
     }
 
     public ApiResponse<ClassModel> createClass(CreateAndUpdateClass classBody) {
-        ClassModel response;
         try {
             ClassModel classModel = new ClassModel();
             classModel.setClassName(classBody.className());
             classModel.setDepartmentId(classBody.departmentId());
             classModel.setCreatedAt(LocalDateTime.now());
-            response = classRepository.save(classModel);
+            ClassModel response = classRepository.save(classModel);
+            return new ApiResponse<>("New class created", response , HttpStatus.CREATED);
         }catch (Exception e){
             return new ApiResponse<>(e.getMessage(), null, HttpStatus.BAD_REQUEST);
         }
-        return new ApiResponse<>("New class created", response , HttpStatus.CREATED);
     }
 
     public ApiResponse<ClassModel> deleteClassById(Long id) {
