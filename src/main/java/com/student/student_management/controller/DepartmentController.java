@@ -4,6 +4,7 @@ import com.student.student_management.dto.ApiResponse;
 import com.student.student_management.dto.CreateAndUpdateDepartment;
 import com.student.student_management.model.DepartmentModel;
 import com.student.student_management.service.DepartmentService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class DepartmentController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<DepartmentModel>> createDepartment(@RequestBody CreateAndUpdateDepartment departmentBody){
+    public ResponseEntity<ApiResponse<DepartmentModel>> createDepartment(@Valid @RequestBody CreateAndUpdateDepartment departmentBody){
         ApiResponse<DepartmentModel> response = departmentService.createDepartment(departmentBody);
         return new ResponseEntity<>(response, response.status());
     }
@@ -42,7 +43,7 @@ public class DepartmentController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ApiResponse<DepartmentModel>> updateDepartmentById(@PathVariable Long id, @RequestBody CreateAndUpdateDepartment departmentBody){
+    public ResponseEntity<ApiResponse<DepartmentModel>> updateDepartmentById(@Valid @PathVariable Long id, @RequestBody CreateAndUpdateDepartment departmentBody){
         ApiResponse<DepartmentModel> response = departmentService.updateDepartmentById(id, departmentBody);
         return new ResponseEntity<>(response, response.status());
     }

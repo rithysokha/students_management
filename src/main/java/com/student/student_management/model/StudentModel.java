@@ -21,6 +21,8 @@ public class StudentModel {
     private LocalDate dateOfBirth;
     @Column(name = "address", nullable = false)
     private String address;
+    @Column(name = "phoneNumber", nullable = false, unique = true, length = 12)
+    private String phoneNumber;
     @Column(name = "class_id", nullable = false)
     @JsonBackReference
     private Long classId;
@@ -28,6 +30,6 @@ public class StudentModel {
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-    @Column(name = "deletd_at")
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 }

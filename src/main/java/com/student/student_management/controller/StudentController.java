@@ -4,6 +4,7 @@ import com.student.student_management.dto.ApiResponse;
 import com.student.student_management.dto.CreateAndUpdateStudent;
 import com.student.student_management.model.StudentModel;
 import com.student.student_management.service.StudentService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class StudentController {
    }
 
    @PostMapping
-   public ResponseEntity<ApiResponse<StudentModel>> createStudent(@RequestBody CreateAndUpdateStudent studentBody){
+   public ResponseEntity<ApiResponse<StudentModel>> createStudent(@Valid @RequestBody CreateAndUpdateStudent studentBody){
       ApiResponse<StudentModel> response = studentService.createStudent(studentBody);
       return new ResponseEntity<>(response, response.status());
    }
@@ -40,7 +41,7 @@ public class StudentController {
    }
 
    @PutMapping("{id}")
-   public ResponseEntity<ApiResponse<StudentModel>> updateStudentById(@PathVariable Long id, @RequestBody CreateAndUpdateStudent studentBody){
+   public ResponseEntity<ApiResponse<StudentModel>> updateStudentById(@PathVariable Long id, @Valid @RequestBody CreateAndUpdateStudent studentBody){
       ApiResponse<StudentModel> response = studentService.updateStudentById(id, studentBody);
       return new ResponseEntity<>(response, response.status());
    }
