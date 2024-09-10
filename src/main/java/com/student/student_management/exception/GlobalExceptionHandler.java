@@ -13,10 +13,9 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException e) {
         Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach(error -> {
-            String fieldName = ((org.springframework.validation.FieldError) error).getField();
+        e.getBindingResult().getAllErrors().forEach(error -> {
             String errorMessage = error.getDefaultMessage();
             errors.put("message", errorMessage);
         });
