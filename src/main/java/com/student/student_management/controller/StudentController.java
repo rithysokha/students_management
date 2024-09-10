@@ -35,8 +35,8 @@ public class StudentController {
       return new ResponseEntity<>(response, response.status());
    }
    @DeleteMapping("{id}")
-   public ResponseEntity<ApiResponse<String>> deleteStudentById(@PathVariable Long id){
-      ApiResponse<String> response = studentService.deleteStudentById(id);
+   public ResponseEntity<ApiResponse<StudentModel>> deleteStudentById(@PathVariable Long id){
+      ApiResponse<StudentModel> response = studentService.deleteStudentById(id);
       return new ResponseEntity<>(response, response.status());
    }
 
