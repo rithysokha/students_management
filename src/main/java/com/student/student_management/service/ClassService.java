@@ -1,8 +1,11 @@
 package com.student.student_management.service;
 
 import com.student.student_management.dto.ApiResponse;
+import com.student.student_management.dto.CreateAndUpdateClass;
 import com.student.student_management.model.ClassModel;
+import com.student.student_management.model.DepartmentModel;
 import com.student.student_management.repository.ClassRepository;
+import com.student.student_management.repository.DepartmentRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ClassService {
     private final ClassRepository classRepository;
+    private final DepartmentRepository departmentRepository;
 
     
     public ApiResponse<List<ClassModel>> getAllClasses() {
@@ -29,15 +33,18 @@ public class ClassService {
                 -> new ApiResponse<>("Class not found", null, HttpStatus.NOT_FOUND));
     }
 
-    public ApiResponse<ClassModel> createClass(ClassModel classBody) {
-        ClassModel classRes;
+    public ApiResponse<ClassModel> createClass(CreateAndUpdateClass classBody) {
+        ClassModel response;
         try {
-            classBody.setCreatedAt(LocalDateTime.now());
-            classRes = classRepository.save(classBody);
+            ClassModel classModel = new ClassModel();
+            classModel.setClassName(classBody.className());
+            classModel.setDepartmentId(classBody.departmentId());
+            classModel.setCreatedAt(LocalDateTime.now());
+            response = classRepository.save(classModel);
         }catch (Exception e){
             return new ApiResponse<>(e.getMessage(), null, HttpStatus.BAD_REQUEST);
         }
-        return new ApiResponse<>("New class created", classRes , HttpStatus.CREATED);
+        return new ApiResponse<>("New class created", response , HttpStatus.CREATED);
     }
 
     public ApiResponse<ClassModel> deleteClassById(Long id) {
@@ -52,20 +59,25 @@ public class ClassService {
     }
 
     @Transactional
-    public ApiResponse<ClassModel> updateClassById(Long id, ClassModel classBody) {
+    public ApiResponse<ClassModel> updateClassById(Long id, CreateAndUpdateClass classBody) {
+
         ApiResponse<ClassModel> classResponse = getOneClassById(id);
         if (classResponse.status() != HttpStatus.OK) {
             return classResponse;
         }
         ClassModel classRes = classResponse.data();
-        if (classBody.getClassName() != null && !classBody.getClassName().isEmpty()) {
-            classRes.setClassName(classBody.getClassName());
-        }
-        if (classBody.getDepartmentId() != null) {
-            classRes.setDepartmentId(classBody.getDepartmentId());
-        }
-        classRes.setUpdatedAt(LocalDateTime.now());
-        classRepository.save(classRes);
-        return new ApiResponse<>("Class updated", classRes, HttpStatus.OK);
+
+            if (classBody.className() != null && !classBody.className().isEmpty()) {
+                classRes.setClassName(classBody.className());
+            }
+            if (classBody.departmentId() != null) {
+                Optional<DepartmentModel> departmentOptional = departmentRepository.findById(classBody.departmentId());
+                if(departmentOptional.isEmpty())
+                    return new ApiResponse<>("Department not found", null, HttpStatus.NOT_FOUND);
+                classRes.setDepartmentId(classBody.departmentId());
+            }
+            classRes.setUpdatedAt(LocalDateTime.now());
+            classRepository.save(classRes);
+            return new ApiResponse<>("Class updated", classRes, HttpStatus.OK);
     }
 }

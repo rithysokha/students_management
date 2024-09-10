@@ -1,6 +1,7 @@
 package com.student.student_management.controller;
 
 import com.student.student_management.dto.ApiResponse;
+import com.student.student_management.dto.CreateAndUpdateClass;
 import com.student.student_management.model.ClassModel;
 import com.student.student_management.service.ClassService;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class ClassController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ClassModel>> createClass(@RequestBody ClassModel classBody){
+    public ResponseEntity<ApiResponse<ClassModel>> createClass(@RequestBody CreateAndUpdateClass classBody){
         ApiResponse<ClassModel> response = classService.createClass(classBody);
         return new ResponseEntity<>(response, response.status());
     }
@@ -40,7 +41,7 @@ public class ClassController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ApiResponse<ClassModel>> updateClassById(@PathVariable Long id, @RequestBody ClassModel classBody){
+    public ResponseEntity<ApiResponse<ClassModel>> updateClassById(@PathVariable Long id, @RequestBody CreateAndUpdateClass classBody){
         ApiResponse<ClassModel> response = classService.updateClassById(id, classBody);
         return new ResponseEntity<>(response, response.status());
     }
