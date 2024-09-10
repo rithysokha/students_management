@@ -1,5 +1,6 @@
 package com.student.student_management.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,6 +21,9 @@ public class StudentModel {
     private LocalDate dateOfBirth;
     @Column(name = "address", nullable = false)
     private String address;
+    @Column(name = "class_id", nullable = false)
+    @JsonBackReference
+    private Long classId;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
     @Column(name = "updated_at")

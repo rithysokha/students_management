@@ -39,6 +39,7 @@ public class StudentService {
             studentModel.setLastName(studentBody.lastName());
             studentModel.setDateOfBirth(studentBody.dateOfBirth());
             studentModel.setAddress(studentBody.address());
+            studentModel.setClassId(studentBody.classId());
             StudentModel response = studentRepository.save(studentModel);
             return new ApiResponse<>("Student created", response, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -72,6 +73,9 @@ public class StudentService {
         }
         if (studentBody.dateOfBirth() != null) {
             studentResponse.setDateOfBirth(studentBody.dateOfBirth());
+        }
+        if(studentBody.classId() != null){
+            studentResponse.setClassId(studentBody.classId());
         }
         studentResponse.setUpdatedAt(LocalDateTime.now());
         return new ApiResponse<>("Student updated", studentRepository.save(studentResponse), HttpStatus.OK);

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Data
@@ -18,6 +19,10 @@ public class ClassModel {
     @Column(name = "department_id", nullable = false)
     @JsonBackReference
     private Long departmentId;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "class_id", referencedColumnName = "id")
+    @JsonBackReference
+    private List<StudentModel> students;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
