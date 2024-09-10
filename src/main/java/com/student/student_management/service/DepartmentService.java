@@ -18,16 +18,13 @@ import java.util.Optional;
 public class DepartmentService {
     private final DepartmentRepository departmentRepository;
 
-    private Optional<DepartmentModel> findDepartmentById(Long id){
-        return departmentRepository.findById(id);
-    }
 
     public ApiResponse<List<DepartmentModel>> getAllDepartments() {
         return new ApiResponse<>("All department", departmentRepository.findAllByDeletedAtIsNull(), HttpStatus.OK);
     }
 
     public ApiResponse<DepartmentModel> getOneDepartmentById(Long id) {
-        Optional<DepartmentModel> departmentOptional = findDepartmentById(id);
+        Optional<DepartmentModel> departmentOptional = departmentRepository.findById(id);
         return departmentOptional.map(departmentModel
                 -> new ApiResponse<>("Department found", departmentModel, HttpStatus.OK)).orElseGet(()
                 -> new ApiResponse<>("Department not found", null, HttpStatus.NOT_FOUND));
@@ -45,29 +42,32 @@ public class DepartmentService {
         }
     }
 
-    public ApiResponse<String> deleteDepartmentById(Long id) {
-        Optional<DepartmentModel> departmentOptional = findDepartmentById(id);
-        if(departmentOptional.isEmpty()) return new ApiResponse<>("Department not found", null, HttpStatus.NOT_FOUND);
-        DepartmentModel departmentRes = departmentOptional.get();
-        departmentRes.setDeletedAt(LocalDateTime.now());
-        departmentRepository.save(departmentRes);
+    public ApiResponse<DepartmentModel> deleteDepartmentById(Long id) {
+        ApiResponse<DepartmentModel> departmentResponse = getOneDepartmentById(id);
+        if(departmentResponse.status() != HttpStatus.OK){
+            return departmentResponse;
+        }
+        DepartmentModel departmentData = departmentResponse.data();
+        departmentData.setDeletedAt(LocalDateTime.now());
+        departmentRepository.save(departmentData);
         return new ApiResponse<>("Department deleted", null, HttpStatus.OK);
     }
 
     @Transactional
     public ApiResponse<DepartmentModel> updateDepartmentById(Long id, CreateAndUpdateDepartment departmentBody) {
         try {
-            Optional<DepartmentModel> departmentOptional = findDepartmentById(id);
-            if (departmentOptional.isEmpty())
-                return new ApiResponse<>("Department not found", null, HttpStatus.NOT_FOUND);
-            DepartmentModel departmentRes = departmentOptional.get();
+            ApiResponse<DepartmentModel> departmentResponse = getOneDepartmentById(id);
+            if(departmentResponse.status() != HttpStatus.OK){
+                return departmentResponse;
+            }
+            DepartmentModel departmentData = departmentResponse.data();
 
             if (departmentBody.departmentName() != null && !departmentBody.departmentName().isEmpty()) {
-                departmentRes.setDepartmentName(departmentBody.departmentName());
+                departmentData.setDepartmentName(departmentBody.departmentName());
             }
-            departmentRes.setUpdatedAt(LocalDateTime.now());
-            departmentRepository.save(departmentRes);
-            return new ApiResponse<>("Department updated", departmentRes, HttpStatus.OK);
+            departmentData.setUpdatedAt(LocalDateTime.now());
+            departmentRepository.save(departmentData);
+            return new ApiResponse<>("Department updated", departmentData, HttpStatus.OK);
         }catch (Exception e){
             return new ApiResponse<>(e.getMessage(), null, HttpStatus.BAD_REQUEST);
         }

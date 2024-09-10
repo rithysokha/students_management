@@ -37,8 +37,8 @@ public class DepartmentController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<ApiResponse<String>> deleteDepartmentById(@PathVariable Long id){
-        ApiResponse<String> response = departmentService.deleteDepartmentById(id);
+    public ResponseEntity<ApiResponse<DepartmentModel>> deleteDepartmentById(@PathVariable Long id){
+        ApiResponse<DepartmentModel> response = departmentService.deleteDepartmentById(id);
         return new ResponseEntity<>(response, response.status());
     }
 

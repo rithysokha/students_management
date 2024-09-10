@@ -18,16 +18,12 @@ import java.util.Optional;
 public class StudentService {
     private final StudentRepository studentRepository;
 
-    private Optional<StudentModel> findStudentById(Long id) {
-        return studentRepository.findById(id);
-    }
-
     public ApiResponse<List<StudentModel>> getAllStudents() {
         return new ApiResponse<>("All students ", studentRepository.findAllByDeletedAtIsNull(), HttpStatus.OK);
     }
 
     public ApiResponse<StudentModel> getOneStudentById(Long id) {
-        Optional<StudentModel> studenOptional = findStudentById(id);
+        Optional<StudentModel> studenOptional = studentRepository.findById(id);
         return studenOptional.map(studentModel -> new ApiResponse<>("Student found", studentModel, HttpStatus.OK)).orElseGet(() -> new ApiResponse<>("Student not found", null, HttpStatus.NOT_FOUND));
     }
 
@@ -48,40 +44,43 @@ public class StudentService {
         }
     }
 
-    public ApiResponse<String> deleteStudentById(Long id) {
-        Optional<StudentModel> studentOptional = findStudentById(id);
-        if (studentOptional.isEmpty()) return new ApiResponse<>("Student not found", null, HttpStatus.NOT_FOUND);
-
-        StudentModel studentResponse = studentOptional.get();
-        studentResponse.setDeletedAt(LocalDateTime.now());
-        studentRepository.save(studentResponse);
+    public ApiResponse<StudentModel> deleteStudentById(Long id) {
+        ApiResponse<StudentModel> studentResponse = getOneStudentById(id);
+        if(studentResponse.status() != HttpStatus.OK){
+            return studentResponse;
+        }
+        StudentModel studentRes = studentResponse.data();
+        studentRes.setDeletedAt(LocalDateTime.now());
+        studentRepository.save(studentRes);
         return new ApiResponse<>("Student deleted", null, HttpStatus.OK);
     }
 
     @Transactional
     public ApiResponse<StudentModel> updateStudentById(Long id, CreateAndUpdateStudent studentBody) {
-        Optional<StudentModel> studentOptional = findStudentById(id);
-        if (studentOptional.isEmpty()) return new ApiResponse<>("Student not found", null, HttpStatus.NOT_FOUND);
-        StudentModel studentResponse = studentOptional.get();
+        ApiResponse<StudentModel> studentResponse = getOneStudentById(id);
+        if(studentResponse.status() != HttpStatus.OK){
+            return studentResponse;
+        }
+        StudentModel studentData = studentResponse.data();
         if (studentBody.address() != null && !studentBody.address().isEmpty()) {
-            studentResponse.setAddress(studentBody.address());
+            studentData.setAddress(studentBody.address());
         }
         if (studentBody.firstName() != null && !studentBody.firstName().isEmpty()) {
-            studentResponse.setFirstName(studentBody.firstName());
+            studentData.setFirstName(studentBody.firstName());
         }
         if (studentBody.lastName() != null && !studentBody.lastName().isEmpty()) {
-            studentResponse.setLastName(studentBody.lastName());
+            studentData.setLastName(studentBody.lastName());
         }
         if (studentBody.dateOfBirth() != null) {
-            studentResponse.setDateOfBirth(studentBody.dateOfBirth());
+            studentData.setDateOfBirth(studentBody.dateOfBirth());
         }
         if(studentBody.classId() != null){
-            studentResponse.setClassId(studentBody.classId());
+            studentData.setClassId(studentBody.classId());
         }
         if (studentBody.phoneNumber() != null && !studentBody.phoneNumber().isEmpty()) {
-            studentResponse.setPhoneNumber(studentBody.phoneNumber());
+            studentData.setPhoneNumber(studentBody.phoneNumber());
         }
-        studentResponse.setUpdatedAt(LocalDateTime.now());
-        return new ApiResponse<>("Student updated", studentRepository.save(studentResponse), HttpStatus.OK);
+        studentData.setUpdatedAt(LocalDateTime.now());
+        return new ApiResponse<>("Student updated", studentRepository.save(studentData), HttpStatus.OK);
     }
 }

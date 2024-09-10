@@ -51,10 +51,10 @@ public class ClassService {
         if (classResponse.status() != HttpStatus.OK) {
             return classResponse;
         }
-        ClassModel classRes = classResponse.data();
-        classRes.setDeletedAt(LocalDateTime.now());
-        classRepository.save(classRes);
-        return new ApiResponse<>("Class with id " + id + " is deleted", classRes, HttpStatus.OK);
+        ClassModel classData = classResponse.data();
+        classData.setDeletedAt(LocalDateTime.now());
+        classRepository.save(classData);
+        return new ApiResponse<>("Class with id " + id + " is deleted", classData, HttpStatus.OK);
     }
 
     @Transactional
@@ -64,19 +64,19 @@ public class ClassService {
         if (classResponse.status() != HttpStatus.OK) {
             return classResponse;
         }
-        ClassModel classRes = classResponse.data();
+        ClassModel classData = classResponse.data();
 
             if (classBody.className() != null && !classBody.className().isEmpty()) {
-                classRes.setClassName(classBody.className());
+                classData.setClassName(classBody.className());
             }
             if (classBody.departmentId() != null) {
                 Optional<DepartmentModel> departmentOptional = departmentRepository.findById(classBody.departmentId());
                 if(departmentOptional.isEmpty())
                     return new ApiResponse<>("Department not found", null, HttpStatus.NOT_FOUND);
-                classRes.setDepartmentId(classBody.departmentId());
+                classData.setDepartmentId(classBody.departmentId());
             }
-            classRes.setUpdatedAt(LocalDateTime.now());
-            classRepository.save(classRes);
-            return new ApiResponse<>("Class updated", classRes, HttpStatus.OK);
+            classData.setUpdatedAt(LocalDateTime.now());
+            classRepository.save(classData);
+            return new ApiResponse<>("Class updated", classData, HttpStatus.OK);
     }
 }
