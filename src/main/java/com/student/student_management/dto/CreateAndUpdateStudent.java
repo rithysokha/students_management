@@ -1,8 +1,10 @@
 package com.student.student_management.dto;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -21,5 +23,9 @@ public record CreateAndUpdateStudent (
         Long classId,
         @NotBlank(message = "Phone number is required")
         @Size(min = 10, max = 12, message = "Phone number must be in range from 10 to 12 character")
-        String phoneNumber){
+        String phoneNumber,
+        @Max(value = 1048576, message = "File size must be less than 1MB")
+        MultipartFile picture
+
+){
 }

@@ -17,6 +17,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class StudentService {
     private final StudentRepository studentRepository;
+    private final CloudinaryService cloudinaryService;
 
     public ApiResponse<List<StudentModel>> getAllStudents() {
         return new ApiResponse<>("All students ", studentRepository.findAllByDeletedAtIsNull(), HttpStatus.OK);
@@ -37,6 +38,7 @@ public class StudentService {
             studentModel.setAddress(studentBody.address());
             studentModel.setClassId(studentBody.classId());
             studentModel.setPhoneNumber(studentBody.phoneNumber());
+            studentModel.setPictureUrl(cloudinaryService.uploadFile(studentBody.picture()));
             StudentModel response = studentRepository.save(studentModel);
             return new ApiResponse<>("Student created", response, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -62,25 +64,22 @@ public class StudentService {
             return studentResponse;
         }
         StudentModel studentData = studentResponse.data();
-        if (studentBody.address() != null && !studentBody.address().isEmpty()) {
-            studentData.setAddress(studentBody.address());
-        }
-        if (studentBody.firstName() != null && !studentBody.firstName().isEmpty()) {
-            studentData.setFirstName(studentBody.firstName());
-        }
-        if (studentBody.lastName() != null && !studentBody.lastName().isEmpty()) {
-            studentData.setLastName(studentBody.lastName());
-        }
-        if (studentBody.dateOfBirth() != null) {
-            studentData.setDateOfBirth(studentBody.dateOfBirth());
-        }
-        if(studentBody.classId() != null){
-            studentData.setClassId(studentBody.classId());
-        }
-        if (studentBody.phoneNumber() != null && !studentBody.phoneNumber().isEmpty()) {
-            studentData.setPhoneNumber(studentBody.phoneNumber());
+        updateFieldIfNotNull(studentBody.address(), studentData::setAddress);
+        updateFieldIfNotNull(studentBody.firstName(), studentData::setFirstName);
+        updateFieldIfNotNull(studentBody.lastName(), studentData::setLastName);
+        updateFieldIfNotNull(studentBody.dateOfBirth(), studentData::setDateOfBirth);
+        updateFieldIfNotNull(studentBody.classId(), studentData::setClassId);
+        updateFieldIfNotNull(studentBody.phoneNumber(), studentData::setPhoneNumber);
+        if (studentBody.picture() != null) {
+            studentData.setPictureUrl(cloudinaryService.uploadFile(studentBody.picture()));
         }
         studentData.setUpdatedAt(LocalDateTime.now());
         return new ApiResponse<>("Student updated", studentRepository.save(studentData), HttpStatus.OK);
+    }
+
+    private <T> void updateFieldIfNotNull(T value, java.util.function.Consumer<T> setter) {
+        if (value != null && !(value instanceof String && ((String) value).isEmpty())) {
+            setter.accept(value);
+        }
     }
 }

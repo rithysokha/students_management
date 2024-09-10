@@ -21,8 +21,10 @@ public class StudentModel {
     private LocalDate dateOfBirth;
     @Column(name = "address", nullable = false)
     private String address;
-    @Column(name = "phoneNumber", nullable = false, unique = true, length = 12)
+    @Column(name = "phone_number", nullable = false, unique = true, length = 12)
     private String phoneNumber;
+    @Column(name = "picture_url", length = 1024)
+    private String pictureUrl;
     @Column(name = "class_id", nullable = false)
     @JsonBackReference
     private Long classId;
