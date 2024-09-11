@@ -18,7 +18,7 @@ public class UserModel {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
-    private LocalDateTime udatedAt;
-    @Column(name = "deletd_at")
+    private LocalDateTime updatedAt;
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 }
