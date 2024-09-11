@@ -1,6 +1,7 @@
 package com.student.student_management.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,8 +18,9 @@ public class StudentModel {
     private String firstName;
     @Column(name = "last_name", length = 50, nullable = false)
     private String lastName;
-//    @Column(name = "date_of_birth", nullable = false)
-//    private LocalDate dateOfBirth;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "date_of_birth", nullable = false)
+    private LocalDate dateOfBirth;
     @Column(name = "address", nullable = false)
     private String address;
     @Column(name = "phone_number", nullable = false, unique = true, length = 12)

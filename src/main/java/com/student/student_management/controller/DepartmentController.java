@@ -5,7 +5,7 @@ import com.student.student_management.dto.CreateAndUpdateDepartment;
 import com.student.student_management.model.DepartmentModel;
 import com.student.student_management.service.DepartmentService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +13,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/department")
-@AllArgsConstructor
-public class DepartmentController {
 
+@RequiredArgsConstructor
+public class DepartmentController {
     private final DepartmentService departmentService;
 
     @GetMapping
