@@ -15,8 +15,8 @@ public record CreateAndUpdateStudent (
         @NotBlank(message = "Last name is required")
         @Size(max = 50, message = "Last name must be less than 51 character")
         String lastName,
-        @NotBlank(message = "Date of birth is required")
-        LocalDate dateOfBirth,
+//        @NotNull(message = "Date of birth is required")
+//        LocalDate dateOfBirth,
         @NotBlank(message = "Address is required")
         String address,
         @NotNull
@@ -24,7 +24,6 @@ public record CreateAndUpdateStudent (
         @NotBlank(message = "Phone number is required")
         @Size(min = 10, max = 12, message = "Phone number must be in range from 10 to 12 character")
         String phoneNumber,
-        @Max(value = 1048576, message = "File size must be less than 1MB")
         MultipartFile picture
 
 ){
