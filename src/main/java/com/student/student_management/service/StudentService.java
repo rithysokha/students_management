@@ -34,11 +34,13 @@ public class StudentService {
             studentModel.setCreatedAt(LocalDateTime.now());
             studentModel.setFirstName(studentBody.firstName());
             studentModel.setLastName(studentBody.lastName());
-            studentModel.setDateOfBirth(studentBody.dateOfBirth());
+//            studentModel.setDateOfBirth(studentBody.dateOfBirth());
             studentModel.setAddress(studentBody.address());
             studentModel.setClassId(studentBody.classId());
             studentModel.setPhoneNumber(studentBody.phoneNumber());
-            studentModel.setPictureUrl(cloudinaryService.uploadFile(studentBody.picture()));
+            if (studentBody.picture() != null && !studentBody.picture().isEmpty()) {
+                studentModel.setPictureUrl(cloudinaryService.uploadFile(studentBody.picture()));
+            }
             StudentModel response = studentRepository.save(studentModel);
             return new ApiResponse<>("Student created", response, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -67,7 +69,7 @@ public class StudentService {
         updateFieldIfNotNull(studentBody.address(), studentData::setAddress);
         updateFieldIfNotNull(studentBody.firstName(), studentData::setFirstName);
         updateFieldIfNotNull(studentBody.lastName(), studentData::setLastName);
-        updateFieldIfNotNull(studentBody.dateOfBirth(), studentData::setDateOfBirth);
+//        updateFieldIfNotNull(studentBody.dateOfBirth(), studentData::setDateOfBirth);
         updateFieldIfNotNull(studentBody.classId(), studentData::setClassId);
         updateFieldIfNotNull(studentBody.phoneNumber(), studentData::setPhoneNumber);
         if (studentBody.picture() != null) {

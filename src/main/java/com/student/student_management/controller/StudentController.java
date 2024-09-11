@@ -8,7 +8,9 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -30,7 +32,18 @@ public class StudentController {
    }
 
    @PostMapping
-   public ResponseEntity<ApiResponse<StudentModel>> createStudent(@Valid @RequestBody CreateAndUpdateStudent studentBody){
+   public ResponseEntity<ApiResponse<StudentModel>> createStudent(
+           @RequestParam("firstName") String firstName,
+           @RequestParam("lastName") String lastName,
+//           @RequestParam("dateOfBirth") String dateOfBirth,
+           @RequestParam("address") String address,
+           @RequestParam("classId") Long classId,
+           @RequestParam("phoneNumber") String phoneNumber,
+           @RequestParam("picture") MultipartFile picture) {
+
+      CreateAndUpdateStudent studentBody = new CreateAndUpdateStudent(
+              firstName, lastName, address, classId, phoneNumber, picture);
+
       ApiResponse<StudentModel> response = studentService.createStudent(studentBody);
       return new ResponseEntity<>(response, response.status());
    }
