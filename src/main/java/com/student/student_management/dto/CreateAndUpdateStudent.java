@@ -1,6 +1,5 @@
 package com.student.student_management.dto;
 
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -15,8 +14,8 @@ public record CreateAndUpdateStudent (
         @NotBlank(message = "Last name is required")
         @Size(max = 50, message = "Last name must be less than 51 character")
         String lastName,
-//        @NotNull(message = "Date of birth is required")
-//        LocalDate dateOfBirth,
+        @NotNull(message = "Date of birth is required")
+        LocalDate dateOfBirth,
         @NotBlank(message = "Address is required")
         String address,
         @NotNull

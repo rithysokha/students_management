@@ -43,6 +43,7 @@ public class DepartmentService {
     }
 
     public ApiResponse<DepartmentModel> deleteDepartmentById(Long id) {
+        try {
         ApiResponse<DepartmentModel> departmentResponse = getOneDepartmentById(id);
         if(departmentResponse.status() != HttpStatus.OK){
             return departmentResponse;
@@ -51,6 +52,9 @@ public class DepartmentService {
         departmentData.setDeletedAt(LocalDateTime.now());
         departmentRepository.save(departmentData);
         return new ApiResponse<>("Department deleted", null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Transactional

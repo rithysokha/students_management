@@ -47,36 +47,43 @@ public class ClassService {
     }
 
     public ApiResponse<ClassModel> deleteClassById(Long id) {
-        ApiResponse<ClassModel> classResponse = getOneClassById(id);
-        if (classResponse.status() != HttpStatus.OK) {
-            return classResponse;
+        try {
+            ApiResponse<ClassModel> classResponse = getOneClassById(id);
+            if (classResponse.status() != HttpStatus.OK) {
+                return classResponse;
+            }
+            ClassModel classData = classResponse.data();
+            classData.setDeletedAt(LocalDateTime.now());
+            classRepository.save(classData);
+            return new ApiResponse<>("Class with id " + id + " is deleted", classData, HttpStatus.OK);
+        }catch (Exception e){
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.BAD_REQUEST);
         }
-        ClassModel classData = classResponse.data();
-        classData.setDeletedAt(LocalDateTime.now());
-        classRepository.save(classData);
-        return new ApiResponse<>("Class with id " + id + " is deleted", classData, HttpStatus.OK);
     }
 
     @Transactional
     public ApiResponse<ClassModel> updateClassById(Long id, CreateAndUpdateClass classBody) {
-
-        ApiResponse<ClassModel> classResponse = getOneClassById(id);
-        if (classResponse.status() != HttpStatus.OK) {
-            return classResponse;
-        }
-        ClassModel classData = classResponse.data();
+        try {
+            ApiResponse<ClassModel> classResponse = getOneClassById(id);
+            if (classResponse.status() != HttpStatus.OK) {
+                return classResponse;
+            }
+            ClassModel classData = classResponse.data();
 
             if (classBody.className() != null && !classBody.className().isEmpty()) {
                 classData.setClassName(classBody.className());
             }
             if (classBody.departmentId() != null) {
                 Optional<DepartmentModel> departmentOptional = departmentRepository.findById(classBody.departmentId());
-                if(departmentOptional.isEmpty())
+                if (departmentOptional.isEmpty())
                     return new ApiResponse<>("Department not found", null, HttpStatus.NOT_FOUND);
                 classData.setDepartmentId(classBody.departmentId());
             }
             classData.setUpdatedAt(LocalDateTime.now());
             classRepository.save(classData);
             return new ApiResponse<>("Class updated", classData, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.BAD_REQUEST);
+        }
     }
 }

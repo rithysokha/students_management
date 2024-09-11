@@ -34,7 +34,7 @@ public class StudentService {
             studentModel.setCreatedAt(LocalDateTime.now());
             studentModel.setFirstName(studentBody.firstName());
             studentModel.setLastName(studentBody.lastName());
-//            studentModel.setDateOfBirth(studentBody.dateOfBirth());
+            studentModel.setDateOfBirth(studentBody.dateOfBirth());
             studentModel.setAddress(studentBody.address());
             studentModel.setClassId(studentBody.classId());
             studentModel.setPhoneNumber(studentBody.phoneNumber());
@@ -49,6 +49,7 @@ public class StudentService {
     }
 
     public ApiResponse<StudentModel> deleteStudentById(Long id) {
+        try {
         ApiResponse<StudentModel> studentResponse = getOneStudentById(id);
         if(studentResponse.status() != HttpStatus.OK){
             return studentResponse;
@@ -57,10 +58,14 @@ public class StudentService {
         studentRes.setDeletedAt(LocalDateTime.now());
         studentRepository.save(studentRes);
         return new ApiResponse<>("Student deleted", null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Transactional
     public ApiResponse<StudentModel> updateStudentById(Long id, CreateAndUpdateStudent studentBody) {
+        try {
         ApiResponse<StudentModel> studentResponse = getOneStudentById(id);
         if(studentResponse.status() != HttpStatus.OK){
             return studentResponse;
@@ -69,7 +74,7 @@ public class StudentService {
         updateFieldIfNotNull(studentBody.address(), studentData::setAddress);
         updateFieldIfNotNull(studentBody.firstName(), studentData::setFirstName);
         updateFieldIfNotNull(studentBody.lastName(), studentData::setLastName);
-//        updateFieldIfNotNull(studentBody.dateOfBirth(), studentData::setDateOfBirth);
+        updateFieldIfNotNull(studentBody.dateOfBirth(), studentData::setDateOfBirth);
         updateFieldIfNotNull(studentBody.classId(), studentData::setClassId);
         updateFieldIfNotNull(studentBody.phoneNumber(), studentData::setPhoneNumber);
         if (studentBody.picture() != null) {
@@ -77,6 +82,9 @@ public class StudentService {
         }
         studentData.setUpdatedAt(LocalDateTime.now());
         return new ApiResponse<>("Student updated", studentRepository.save(studentData), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     private <T> void updateFieldIfNotNull(T value, java.util.function.Consumer<T> setter) {
