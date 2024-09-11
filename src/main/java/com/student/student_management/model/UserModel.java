@@ -13,8 +13,6 @@ public class UserModel {
     private Long id;
     @Column(name = "username", length = 50, nullable = false, unique = true)
     private String username;
-    @Column(name = "phone_number", length = 12, nullable = false, unique = true)
-    private String phoneNumber;
     @Column(name = "password", length = 512, nullable = false)
     private String password;
     @Column(name = "created_at", nullable = false)
