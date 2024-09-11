@@ -30,7 +30,7 @@ public class StudentController {
    }
 
    @PostMapping
-   public ResponseEntity<ApiResponse<StudentModel>> createStudent(@Valid @ModelAttribute CreateAndUpdateStudent studentBody){
+   public ResponseEntity<ApiResponse<StudentModel>> createStudent(@Valid @RequestBody CreateAndUpdateStudent studentBody){
       ApiResponse<StudentModel> response = studentService.createStudent(studentBody);
       return new ResponseEntity<>(response, response.status());
    }
@@ -41,7 +41,7 @@ public class StudentController {
    }
 
    @PutMapping("{id}")
-   public ResponseEntity<ApiResponse<StudentModel>> updateStudentById(@PathVariable Long id, @Valid @ModelAttribute CreateAndUpdateStudent studentBody){
+   public ResponseEntity<ApiResponse<StudentModel>> updateStudentById(@PathVariable Long id, @Valid @RequestBody CreateAndUpdateStudent studentBody){
       ApiResponse<StudentModel> response = studentService.updateStudentById(id, studentBody);
       return new ResponseEntity<>(response, response.status());
    }
