@@ -1,6 +1,6 @@
 package com.student.student_management.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,7 +17,7 @@ public class DepartmentModel {
     private String departmentName;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "department_id", referencedColumnName = "id")
-    @JsonBackReference
+    @JsonManagedReference
     private List<ClassModel> classes;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

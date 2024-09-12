@@ -2,6 +2,7 @@ package com.student.student_management.config;
 
 import com.student.student_management.service.JwtService;
 import com.student.student_management.service.UserService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,14 +32,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String jwt = authHeader.substring(7);
-        String username = jwtService.ExtractUsername(jwt);
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+        String username = null;
+        try {
+            username = jwtService.ExtractUsername(jwt);
+        } catch (ExpiredJwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token has expired");
+            return;
+        }
+
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userService.loadUserByUsername(username);
-            if(userDetails != null && jwtService.isTokenValid(jwt, "access")){
+            if (userDetails != null && jwtService.isTokenValid(jwt, "access")) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         username,
-                        userDetails.getPassword(),
-                        userDetails.getAuthorities()
+                        userDetails.getPassword()
                 );
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);

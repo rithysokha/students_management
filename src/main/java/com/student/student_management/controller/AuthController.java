@@ -1,6 +1,5 @@
 package com.student.student_management.controller;
 
-import com.cloudinary.Api;
 import com.student.student_management.dto.ApiResponse;
 import com.student.student_management.dto.Token;
 import com.student.student_management.dto.RegisterAndLogin;

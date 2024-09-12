@@ -20,7 +20,7 @@ public class StudentService {
     private final CloudinaryService cloudinaryService;
 
     public ApiResponse<List<StudentModel>> getAllStudents() {
-        return new ApiResponse<>("All students ", studentRepository.findAllByDeletedAtIsNull(), HttpStatus.OK);
+        return new ApiResponse<>("All students", studentRepository.findAllByDeletedAtIsNull(), HttpStatus.OK);
     }
 
     public ApiResponse<StudentModel> getOneStudentById(Long id) {
@@ -91,5 +91,13 @@ public class StudentService {
         if (value != null && !(value instanceof String && ((String) value).isEmpty())) {
             setter.accept(value);
         }
+    }
+
+    public ApiResponse<List<StudentModel>> getStudentsByClassId(Long classId) {
+        return new ApiResponse<>("Students found", studentRepository.findAllByClassIdAndDeletedAtIsNull(classId), HttpStatus.OK);
+    }
+
+    public ApiResponse<List<StudentModel>> getStudentsByDepartment(Long departmentId) {
+        return new ApiResponse<>("null", null, HttpStatus.OK);
     }
 }
