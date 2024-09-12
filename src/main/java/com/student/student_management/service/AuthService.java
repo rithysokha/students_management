@@ -36,7 +36,16 @@ public class AuthService {
     }
 
     public ApiResponse<Token> login(RegisterAndLogin loginBody) {
-    return null;
+        var user = userRepository.findByUsername(loginBody.username());
+        if(user.isPresent()){
+            if(passwordEncoder.passwordEncoder().matches(loginBody.password(), user.get().getPassword())){
+                Token token = new Token(
+                        getToken(user.get().getUsername(), "access"),
+                        getToken(user.get().getUsername(), "refresh"));
+                return new ApiResponse<>("Login successful", token, HttpStatus.OK);
+            }
+        }
+        return new ApiResponse<>("Invalid credentials", null, HttpStatus.UNAUTHORIZED);
     }
 
     public ApiResponse<Token> getRefreshToken(String refreshToken) {

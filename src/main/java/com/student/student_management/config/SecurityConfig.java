@@ -30,14 +30,15 @@ public class SecurityConfig {
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(
                         authorizeHttp -> {
-                            authorizeHttp.requestMatchers("/api/**").authenticated();
-                            authorizeHttp.anyRequest().permitAll();
+                            authorizeHttp.requestMatchers("/auth/login").permitAll();
+                            authorizeHttp.requestMatchers("/auth/register").permitAll();
+                            authorizeHttp.anyRequest().authenticated();
                         }
                 ).httpBasic(withDefaults())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
-
     }
+
     @Bean
     public UserDetailsService userDetailsService(){
         return userService;
@@ -47,6 +48,7 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(){
         return new ProviderManager(authenticationProvider());
     }
+
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();

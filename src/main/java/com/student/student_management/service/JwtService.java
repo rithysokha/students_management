@@ -20,7 +20,6 @@ private final String secret = Dotenv.load().get("JWT_SECRET");
 
     public String generateToken(UserDetails userDetails, String tokenType){
         Map<String, String> claims = new HashMap<>();
-        claims.put("role", userDetails.getAuthorities().toString());
         claims.put("type", tokenType);
         return Jwts.builder()
                 .subject(userDetails.getUsername())
