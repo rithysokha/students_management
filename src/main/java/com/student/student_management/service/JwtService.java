@@ -33,7 +33,7 @@ private final String secret = Dotenv.load().get("JWT_SECRET");
         byte[] decodedKey = Base64.getDecoder().decode(secret);
         return Keys.hmacShaKeyFor(decodedKey);
     }
-    public String ExtractUsername(String jwt) {
+    public String extractUsername(String jwt) {
         Claims claims = getClaims(jwt);
         return claims.getSubject();
     }
@@ -45,6 +45,7 @@ private final String secret = Dotenv.load().get("JWT_SECRET");
                 .parseSignedClaims(jwt)
                 .getPayload();
     }
+
     public boolean isTokenValid(String jwt, String tokenType) {
         Claims claims = getClaims(jwt);
         return claims.getExpiration().after(Date.from(Instant.now())) && tokenType.equals(claims.get("type"));

@@ -19,7 +19,7 @@ public class AuthService {
     private final PasswordEncoderConfig passwordEncoder;
     private final UserService userService;
     private final JwtService jwtService;
-    public ApiResponse<Token> register(RegisterAndLogin registerBody) {
+    public ApiResponse<String> register(RegisterAndLogin registerBody) {
         var user = userRepository.findByUsername(registerBody.username());
         if(user.isPresent()){
             return new ApiResponse<>("user already exist", null, HttpStatus.BAD_REQUEST);
@@ -29,10 +29,8 @@ public class AuthService {
         newUser.setPassword(passwordEncoder.passwordEncoder().encode(registerBody.password()));
         newUser.setCreatedAt(LocalDateTime.now());
         userRepository.save(newUser);
-        Token token = new Token(
-                getToken(newUser.getUsername(), "access"),
-                getToken(newUser.getUsername(), "refresh"));
-        return new ApiResponse<>("User registered successfully", token, HttpStatus.CREATED);
+
+        return new ApiResponse<>("User registered successfully", "Please use the credentials to login", HttpStatus.CREATED);
     }
 
     public ApiResponse<Token> login(RegisterAndLogin loginBody) {
@@ -49,7 +47,10 @@ public class AuthService {
     }
 
     public ApiResponse<Token> getRefreshToken(String refreshToken) {
-        return null;
+        String newAccessToken = jwtService.generateToken(userService.loadUserByUsername(jwtService.extractUsername(refreshToken)), "access");
+        String newRefreshToken =jwtService.generateToken(userService.loadUserByUsername(jwtService.extractUsername(refreshToken)), "refresh");
+        Token token = new Token(newAccessToken, newRefreshToken);
+        return new ApiResponse<>("Token refreshed", token, HttpStatus.OK);
     }
     private String getToken(String username, String type) {
         return jwtService.generateToken(userService.loadUserByUsername(username), type);

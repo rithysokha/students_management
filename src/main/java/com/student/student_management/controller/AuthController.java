@@ -16,8 +16,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<Token>> register(@RequestBody RegisterAndLogin registerBody){
-        ApiResponse<Token> response = authService.register(registerBody);
+    public ResponseEntity<ApiResponse<String>> register(@RequestBody RegisterAndLogin registerBody){
+        ApiResponse<String> response = authService.register(registerBody);
         return new ResponseEntity<>(response, response.status());
     }
 
