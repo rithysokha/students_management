@@ -23,6 +23,11 @@ public class ClassController {
         return new ResponseEntity<>(response, response.status());
     }
 
+    @GetMapping("/by-department")
+    public ResponseEntity<ApiResponse<List<ClassModel>>> getClassesByDepartmentId(@RequestParam Long departmentId){
+        ApiResponse<List<ClassModel>> response = classService.getClassesByDepartmentId(departmentId);
+        return new ResponseEntity<>(response, response.status());
+    }
     @GetMapping("{id}")
     public ResponseEntity<ApiResponse<ClassModel>> getOneClassById(@PathVariable Long id){
         ApiResponse<ClassModel> response = classService.getOneClassById(id);

@@ -89,4 +89,8 @@ public class ClassService {
             return new ApiResponse<>(e.getMessage(), null, HttpStatus.BAD_REQUEST);
         }
     }
+
+    public ApiResponse<List<ClassModel>> getClassesByDepartmentId(Long departmentId) {
+        return new ApiResponse<>("Classes by department", classRepository.findAllByDepartmentIdAndDeletedAtIsNull(departmentId), HttpStatus.OK);
+    }
 }
