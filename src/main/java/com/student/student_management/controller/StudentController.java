@@ -22,13 +22,13 @@ public class StudentController {
       ApiResponse<List<StudentModel>> response = studentService.getAllStudents();
       return new ResponseEntity<>(response, response.status());
    }
-   @GetMapping("/by-class/{classId}")
-   public ResponseEntity<ApiResponse<List<StudentModel>>> getStudentsByClassId(@PathVariable Long classId){
+   @GetMapping("/by-class")
+   public ResponseEntity<ApiResponse<List<StudentModel>>> getStudentsByClassId(@RequestParam Long classId){
       ApiResponse<List<StudentModel>> response = studentService.getStudentsByClassId(classId);
       return new ResponseEntity<>(response, response.status());
    }
-   @GetMapping("/by-department/{departmentId}")
-   public ResponseEntity<ApiResponse<List<StudentModel>>> getStudentsByDepartment(@PathVariable Long departmentId){
+   @GetMapping("/by-department")
+   public ResponseEntity<ApiResponse<List<StudentModel>>> getStudentsByDepartment(@RequestParam Long departmentId){
       ApiResponse<List<StudentModel>> response = studentService.getStudentsByDepartment(departmentId);
       return new ResponseEntity<>(response, response.status());
    }

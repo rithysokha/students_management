@@ -94,10 +94,10 @@ public class StudentService {
     }
 
     public ApiResponse<List<StudentModel>> getStudentsByClassId(Long classId) {
-        return new ApiResponse<>("Students found", studentRepository.findAllByClassIdAndDeletedAtIsNull(classId), HttpStatus.OK);
+        return new ApiResponse<>("Students by class", studentRepository.findAllByClassIdAndDeletedAtIsNull(classId), HttpStatus.OK);
     }
 
     public ApiResponse<List<StudentModel>> getStudentsByDepartment(Long departmentId) {
-        return new ApiResponse<>("null", null, HttpStatus.OK);
+        return new ApiResponse<>("Students by department", null, HttpStatus.OK);
     }
 }
