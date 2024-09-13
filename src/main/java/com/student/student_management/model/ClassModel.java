@@ -16,9 +16,10 @@ public class ClassModel {
     private Long id;
     @Column(name = "class_name", length = 20, nullable = false, unique = true)
     private String className;
-    @Column(name = "department_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "department_id", referencedColumnName = "id")
     @JsonIgnore
-    private Long departmentId;
+    private DepartmentModel department;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "class_id", referencedColumnName = "id")
     @JsonIgnore

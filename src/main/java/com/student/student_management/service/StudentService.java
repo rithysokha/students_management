@@ -2,7 +2,9 @@ package com.student.student_management.service;
 
 import com.student.student_management.dto.ApiResponse;
 import com.student.student_management.dto.CreateAndUpdateStudent;
+import com.student.student_management.model.ClassModel;
 import com.student.student_management.model.StudentModel;
+import com.student.student_management.repository.ClassRepository;
 import com.student.student_management.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class StudentService {
     private final StudentRepository studentRepository;
     private final CloudinaryService cloudinaryService;
+    private final ClassRepository classRepository;
 
     public ApiResponse<List<StudentModel>> getAllStudents() {
         return new ApiResponse<>("All students", studentRepository.findAllByDeletedAtIsNull(), HttpStatus.OK);
@@ -31,12 +34,15 @@ public class StudentService {
     public ApiResponse<StudentModel> createStudent(CreateAndUpdateStudent studentBody) {
         try {
             StudentModel studentModel = new StudentModel();
+            Optional<ClassModel> classOptional = classRepository.findById(studentBody.classId());
             studentModel.setCreatedAt(LocalDateTime.now());
             studentModel.setFirstName(studentBody.firstName());
             studentModel.setLastName(studentBody.lastName());
             studentModel.setDateOfBirth(studentBody.dateOfBirth());
             studentModel.setAddress(studentBody.address());
-            studentModel.setClassId(studentBody.classId());
+            if(classOptional.isEmpty())
+                return new ApiResponse<>("Class not found", null, HttpStatus.NOT_FOUND);
+            studentModel.setStudentClass(classOptional.get());
             studentModel.setPhoneNumber(studentBody.phoneNumber());
             if (studentBody.picture() != null && !studentBody.picture().isEmpty()) {
                 studentModel.setPictureUrl(cloudinaryService.uploadFile(studentBody.picture()));
@@ -67,6 +73,7 @@ public class StudentService {
     public ApiResponse<StudentModel> updateStudentById(Long id, CreateAndUpdateStudent studentBody) {
         try {
         ApiResponse<StudentModel> studentResponse = getOneStudentById(id);
+        Optional<ClassModel> classOptional = classRepository.findById(studentBody.classId());
         if(studentResponse.status() != HttpStatus.OK){
             return studentResponse;
         }
@@ -75,7 +82,9 @@ public class StudentService {
         updateFieldIfNotNull(studentBody.firstName(), studentData::setFirstName);
         updateFieldIfNotNull(studentBody.lastName(), studentData::setLastName);
         updateFieldIfNotNull(studentBody.dateOfBirth(), studentData::setDateOfBirth);
-        updateFieldIfNotNull(studentBody.classId(), studentData::setClassId);
+        if(classOptional.isEmpty())
+            return new ApiResponse<>("Class not found", null, HttpStatus.NOT_FOUND);
+        studentData.setStudentClass(classOptional.get());
         updateFieldIfNotNull(studentBody.phoneNumber(), studentData::setPhoneNumber);
         if (studentBody.picture() != null) {
             studentData.setPictureUrl(cloudinaryService.uploadFile(studentBody.picture()));
@@ -94,10 +103,10 @@ public class StudentService {
     }
 
     public ApiResponse<List<StudentModel>> getStudentsByClassId(Long classId) {
-        return new ApiResponse<>("Students by class", studentRepository.findAllByClassIdAndDeletedAtIsNull(classId), HttpStatus.OK);
+        return new ApiResponse<>("Students by class", studentRepository.findAllByStudentClassIdAndDeletedAtIsNull(classId), HttpStatus.OK);
     }
 
     public ApiResponse<List<StudentModel>> getStudentsByDepartment(Long departmentId) {
-        return new ApiResponse<>("Students by department", null, HttpStatus.OK);
+        return new ApiResponse<>("Students by department", studentRepository.findAllByStudentClassDepartmentIdAndDeletedAtIsNull(departmentId), HttpStatus.OK);
     }
 }

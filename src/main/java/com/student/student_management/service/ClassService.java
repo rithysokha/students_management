@@ -36,8 +36,11 @@ public class ClassService {
     public ApiResponse<ClassModel> createClass(CreateAndUpdateClass classBody) {
         try {
             ClassModel classModel = new ClassModel();
+            Optional<DepartmentModel> departmentOptional = departmentRepository.findById(classBody.departmentId());
+            if (departmentOptional.isEmpty())
+                return new ApiResponse<>("Department not found", null, HttpStatus.NOT_FOUND);
+            classModel.setDepartment(departmentOptional.get());
             classModel.setClassName(classBody.className());
-            classModel.setDepartmentId(classBody.departmentId());
             classModel.setCreatedAt(LocalDateTime.now());
             ClassModel response = classRepository.save(classModel);
             return new ApiResponse<>("New class created", response , HttpStatus.CREATED);
@@ -77,7 +80,7 @@ public class ClassService {
                 Optional<DepartmentModel> departmentOptional = departmentRepository.findById(classBody.departmentId());
                 if (departmentOptional.isEmpty())
                     return new ApiResponse<>("Department not found", null, HttpStatus.NOT_FOUND);
-                classData.setDepartmentId(classBody.departmentId());
+                classData.setDepartment(departmentOptional.get());
             }
             classData.setUpdatedAt(LocalDateTime.now());
             classRepository.save(classData);

@@ -1,5 +1,6 @@
 package com.student.student_management.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -15,9 +16,10 @@ public class DepartmentModel {
     private Long id;
     @Column(name = "department_name", length = 20, nullable = false, unique = true)
     private String departmentName;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     @JoinColumn(name = "department_id", referencedColumnName = "id")
     @JsonManagedReference
+    @JsonIgnore
     private List<ClassModel> classes;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

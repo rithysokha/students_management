@@ -1,7 +1,7 @@
 package com.student.student_management.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -27,9 +27,10 @@ public class StudentModel {
     private String phoneNumber;
     @Column(name = "picture_url", length = 1024)
     private String pictureUrl;
-    @Column(name = "class_id", nullable = false)
-    @JsonBackReference
-    private Long classId;
+    @ManyToOne
+    @JoinColumn(name = "class_id", referencedColumnName = "id")
+    @JsonIgnore
+    private ClassModel studentClass;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
