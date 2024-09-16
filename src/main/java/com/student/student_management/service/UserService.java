@@ -4,6 +4,7 @@ import com.student.student_management.model.UserModel;
 import com.student.student_management.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class UserService implements UserDetailsService {
         Optional<UserModel> user = userRepository.findByUsername(username);
         if(user.isPresent()){
             var userModel = user.get();
-            return org.springframework.security.core.userdetails.User.builder()
+            return User.builder()
                     .username(userModel.getUsername())
                     .password(userModel.getPassword())
                     .build();
