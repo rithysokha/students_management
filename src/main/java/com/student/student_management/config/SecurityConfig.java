@@ -30,12 +30,10 @@ public class SecurityConfig {
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(
                         authorizeHttp -> {
-                            authorizeHttp.requestMatchers("/auth/login").permitAll();
-                            authorizeHttp.requestMatchers("/auth/register").permitAll();
-                            authorizeHttp.anyRequest().permitAll();
+                            authorizeHttp.requestMatchers("/auth/*").permitAll();
+                            authorizeHttp.anyRequest().authenticated();
                         }
-                ).httpBasic(withDefaults())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
