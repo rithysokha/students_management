@@ -25,9 +25,10 @@ public class DepartmentService {
 
     public ApiResponse<DepartmentModel> getOneDepartmentById(Long id) {
         Optional<DepartmentModel> departmentOptional = departmentRepository.findById(id);
-        return departmentOptional.map(departmentModel
-                -> new ApiResponse<>("Department found", departmentModel, HttpStatus.OK)).orElseGet(()
-                -> new ApiResponse<>("Department not found", null, HttpStatus.NOT_FOUND));
+        if (departmentOptional.isPresent() && departmentOptional.get().getDeletedAt() == null){
+            return new ApiResponse<>("Department found", departmentOptional.get(), HttpStatus.OK);
+        }
+        return new ApiResponse<>("Department not found", null, HttpStatus.NOT_FOUND);
     }
 
     public ApiResponse<DepartmentModel> createDepartment(CreateAndUpdateDepartment departmentBody) {

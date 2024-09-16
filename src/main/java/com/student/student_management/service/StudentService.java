@@ -28,7 +28,10 @@ public class StudentService {
 
     public ApiResponse<StudentModel> getOneStudentById(Long id) {
         Optional<StudentModel> studenOptional = studentRepository.findById(id);
-        return studenOptional.map(studentModel -> new ApiResponse<>("Student found", studentModel, HttpStatus.OK)).orElseGet(() -> new ApiResponse<>("Student not found", null, HttpStatus.NOT_FOUND));
+        if(studenOptional.isPresent() && studenOptional.get().getDeletedAt()==null){
+            return new ApiResponse<>("Student found", studenOptional.get(), HttpStatus.OK);
+        }
+        return new ApiResponse<>("Student not found", null, HttpStatus.NOT_FOUND);
     }
 
     public ApiResponse<StudentModel> createStudent(CreateAndUpdateStudent studentBody) {
@@ -40,7 +43,7 @@ public class StudentService {
             studentModel.setLastName(studentBody.lastName());
             studentModel.setDateOfBirth(studentBody.dateOfBirth());
             studentModel.setAddress(studentBody.address());
-            if(classOptional.isEmpty())
+            if(classOptional.isEmpty() || classOptional.get().getDeletedAt() != null)
                 return new ApiResponse<>("Class not found", null, HttpStatus.NOT_FOUND);
             studentModel.setStudentClass(classOptional.get());
             studentModel.setPhoneNumber(studentBody.phoneNumber());

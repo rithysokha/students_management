@@ -28,9 +28,10 @@ public class ClassService {
 
     public ApiResponse<ClassModel> getOneClassById(Long id) {
         Optional<ClassModel> classOptional = classRepository.findById(id);
-        return classOptional.map(classModel
-                -> new ApiResponse<>("Class found", classModel, HttpStatus.OK)).orElseGet(()
-                -> new ApiResponse<>("Class not found", null, HttpStatus.NOT_FOUND));
+        if(classOptional.isPresent() && classOptional.get().getDeletedAt() == null){
+            return new ApiResponse<>("Class found", classOptional.get(), HttpStatus.OK);
+        }
+        return  new ApiResponse<>("Class not found", null, HttpStatus.NOT_FOUND);
     }
 
     public ApiResponse<ClassModel> createClass(CreateAndUpdateClass classBody) {
@@ -78,7 +79,7 @@ public class ClassService {
             }
             if (classBody.departmentId() != null) {
                 Optional<DepartmentModel> departmentOptional = departmentRepository.findById(classBody.departmentId());
-                if (departmentOptional.isEmpty())
+                if (departmentOptional.isEmpty() || departmentOptional.get().getDeletedAt() !=null)
                     return new ApiResponse<>("Department not found", null, HttpStatus.NOT_FOUND);
                 classData.setDepartment(departmentOptional.get());
             }
