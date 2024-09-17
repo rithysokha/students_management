@@ -17,6 +17,11 @@ import java.util.Map;
 @Service
 public class JwtService {
 private final String secret = Dotenv.load().get("JWT_SECRET");
+    private final UserService userService;
+
+    public JwtService(UserService userService) {
+        this.userService = userService;
+    }
 
     public String generateToken(UserDetails userDetails, String tokenType){
         Map<String, String> claims = new HashMap<>();
