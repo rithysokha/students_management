@@ -25,8 +25,6 @@ public class StudentModel {
     private String address;
     @Column(name = "phone_number", nullable = false, unique = true, length = 12)
     private String phoneNumber;
-    @Column(name = "picture_url", length = 1024)
-    private String pictureUrl;
     @ManyToOne
     @JoinColumn(name = "class_id", referencedColumnName = "id")
     @JsonIgnore

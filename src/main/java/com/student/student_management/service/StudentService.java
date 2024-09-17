@@ -19,7 +19,6 @@ import java.util.Optional;
 @AllArgsConstructor
 public class StudentService {
     private final StudentRepository studentRepository;
-    private final CloudinaryService cloudinaryService;
     private final ClassRepository classRepository;
 
     public ApiResponse<List<StudentModel>> getAllStudents() {
@@ -47,9 +46,6 @@ public class StudentService {
                 return new ApiResponse<>("Class not found", null, HttpStatus.NOT_FOUND);
             studentModel.setStudentClass(classOptional.get());
             studentModel.setPhoneNumber(studentBody.phoneNumber());
-            if (studentBody.picture() != null && !studentBody.picture().isEmpty()) {
-                studentModel.setPictureUrl(cloudinaryService.uploadFile(studentBody.picture()));
-            }
             StudentModel response = studentRepository.save(studentModel);
             return new ApiResponse<>("Student created", response, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -89,9 +85,6 @@ public class StudentService {
             return new ApiResponse<>("Class not found", null, HttpStatus.NOT_FOUND);
         studentData.setStudentClass(classOptional.get());
         updateFieldIfNotNull(studentBody.phoneNumber(), studentData::setPhoneNumber);
-        if (studentBody.picture() != null) {
-            studentData.setPictureUrl(cloudinaryService.uploadFile(studentBody.picture()));
-        }
         studentData.setUpdatedAt(LocalDateTime.now());
         return new ApiResponse<>("Student updated", studentRepository.save(studentData), HttpStatus.OK);
         } catch (Exception e) {
