@@ -1,6 +1,7 @@
 package com.student.student_management.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record CreateAndUpdateDepartment(

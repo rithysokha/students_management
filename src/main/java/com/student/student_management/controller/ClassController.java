@@ -47,7 +47,7 @@ public class ClassController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ApiResponse<ClassModel>> updateClassById(@Valid @PathVariable Long id, @RequestBody CreateAndUpdateClass classBody){
+    public ResponseEntity<ApiResponse<ClassModel>> updateClassById(@PathVariable Long id,@Valid @RequestBody CreateAndUpdateClass classBody){
         ApiResponse<ClassModel> response = classService.updateClassById(id, classBody);
         return new ResponseEntity<>(response, response.status());
     }
