@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <property name="LOG_PATH" value="logs"/>
     <property name="LOG_FILE" value="${LOG_PATH}/application.log"/>
@@ -6,9 +5,7 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_FILE}</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
             <fileNamePattern>${LOG_PATH}/application.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- keep 30 days' worth of history -->
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -20,6 +17,11 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss} - %m%n</pattern>
         </encoder>
     </appender>
+
+    <logger name="com.student.student_management.filter.RequestResponseLoggingFilter" level="info" additivity="false">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE"/>
+    </logger>
 
     <root level="info">
         <appender-ref ref="FILE" />
