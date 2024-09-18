@@ -10,4 +10,6 @@ import java.util.List;
 public interface DepartmentRepository extends JpaRepository<DepartmentModel, Long> {
 
     List<DepartmentModel> findAllByDeletedAtIsNull();
+
+    Boolean existsByDepartmentName(String departmentName);
 }

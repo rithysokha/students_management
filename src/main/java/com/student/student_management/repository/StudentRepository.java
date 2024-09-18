@@ -13,4 +13,6 @@ public interface StudentRepository extends JpaRepository<StudentModel, Long> {
     List<StudentModel> findAllByStudentClassIdAndDeletedAtIsNull(Long classId);
 
     List<StudentModel> findAllByStudentClassDepartmentIdAndDeletedAtIsNull(Long departmentId);
+
+    Boolean existsByPhoneNumber(String phoneNumber);
 }

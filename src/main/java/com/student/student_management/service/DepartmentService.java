@@ -42,6 +42,9 @@ public class DepartmentService {
 
     public ApiResponse<DepartmentModel> createDepartment(CreateAndUpdateDepartment departmentBody) {
         try {
+            if (departmentRepository.existsByDepartmentName(departmentBody.departmentName())) {
+                return new ApiResponse<>("Department name is taken", null, HttpStatus.CONFLICT, Status.FAIL);
+            }
             DepartmentModel departmentModel = new DepartmentModel();
             departmentModel.setCreatedAt(LocalDateTime.now());
             departmentModel.setDepartmentName(departmentBody.departmentName());
@@ -70,6 +73,9 @@ public class DepartmentService {
     @Transactional
     public ApiResponse<DepartmentModel> updateDepartmentById(Long id, CreateAndUpdateDepartment departmentBody) {
         try {
+            if (departmentRepository.existsByDepartmentName(departmentBody.departmentName())) {
+                return new ApiResponse<>("Department name is taken", null, HttpStatus.CONFLICT, Status.FAIL);
+            }
             ApiResponse<DepartmentModel> departmentResponse = getOneDepartmentById(id);
             if (departmentResponse.httpStatus() != HttpStatus.OK) {
                 return departmentResponse;

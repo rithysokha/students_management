@@ -45,6 +45,9 @@ public class ClassService {
 
     public ApiResponse<ClassModel> createClass(CreateAndUpdateClass classBody) {
         try {
+            if (classRepository.existsByClassName(classBody.className())) {
+                return new ApiResponse<>("Class name already taken", null, HttpStatus.CONFLICT, Status.FAIL);
+            }
             ClassModel classModel = new ClassModel();
             Optional<DepartmentModel> departmentOptional = departmentRepository.findById(classBody.departmentId());
             if (departmentOptional.isEmpty())
@@ -77,6 +80,9 @@ public class ClassService {
     @Transactional
     public ApiResponse<ClassModel> updateClassById(Long id, CreateAndUpdateClass classBody) {
         try {
+            if (classRepository.existsByClassName(classBody.className())) {
+                return new ApiResponse<>("Class name already taken", null, HttpStatus.CONFLICT, Status.FAIL);
+            }
             ApiResponse<ClassModel> classResponse = getOneClassById(id);
             if (classResponse.httpStatus() != HttpStatus.OK) {
                 return classResponse;

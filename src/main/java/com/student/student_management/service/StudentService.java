@@ -52,6 +52,9 @@ public class StudentService {
             if (isStudentBlackListed(studentBody).blackListed()) {
                 return new ApiResponse<>("Student is in black list", null, HttpStatus.OK, Status.FAIL);
             }
+            if (studentRepository.existsByPhoneNumber(studentBody.phoneNumber())) {
+                return new ApiResponse<>("Phone number already taken", null, HttpStatus.CONFLICT, Status.FAIL);
+            }
             StudentModel studentModel = new StudentModel();
             Optional<ClassModel> classOptional = classRepository.findById(studentBody.classId());
             studentModel.setCreatedAt(LocalDateTime.now());
@@ -88,6 +91,9 @@ public class StudentService {
     @Transactional
     public ApiResponse<StudentModel> updateStudentById(Long id, CreateAndUpdateStudent studentBody) {
         try {
+            if (studentRepository.existsByPhoneNumber(studentBody.phoneNumber())) {
+                return new ApiResponse<>("Phone number already taken", null, HttpStatus.CONFLICT, Status.FAIL);
+            }
             ApiResponse<StudentModel> studentResponse = getOneStudentById(id);
             Optional<ClassModel> classOptional = classRepository.findById(studentBody.classId());
             if (studentResponse.httpStatus() != HttpStatus.OK) {

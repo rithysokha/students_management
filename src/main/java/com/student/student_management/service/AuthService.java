@@ -54,7 +54,6 @@ public class AuthService {
         } catch (RuntimeException e) {
             return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
-
     }
 
     public ApiResponse<Token> getRefreshToken(String refreshToken) {
