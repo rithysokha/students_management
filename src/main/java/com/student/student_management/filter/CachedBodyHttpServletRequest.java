@@ -8,7 +8,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
 public class CachedBodyHttpServletRequest extends HttpServletRequestWrapper {
 
@@ -60,7 +59,11 @@ public class CachedBodyHttpServletRequest extends HttpServletRequestWrapper {
 
         @Override
         public int read() throws IOException {
+            try {
             return byteArrayInputStream.read();
+            } catch (Exception e) {
+                throw new IOException(e);
+            }
         }
     }
 }

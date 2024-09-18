@@ -28,15 +28,23 @@ public class StudentService {
     private final ClassRepository classRepository;
     private final WebClient webClient;
     public ApiResponse<List<StudentModel>> getAllStudents() {
+        try {
         return new ApiResponse<>("All students", studentRepository.findAllByDeletedAtIsNull(), HttpStatus.OK, Status.SUCCESS);
+        } catch (RuntimeException e) {
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
+        }
     }
 
     public ApiResponse<StudentModel> getOneStudentById(Long id) {
+        try {
         Optional<StudentModel> studenOptional = studentRepository.findById(id);
         if(studenOptional.isPresent() && studenOptional.get().getDeletedAt()==null){
             return new ApiResponse<>("Student found", studenOptional.get(), HttpStatus.OK, Status.SUCCESS);
         }
         return new ApiResponse<>("Student not found", null, HttpStatus.NOT_FOUND, Status.FAIL);
+        } catch (RuntimeException e) {
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
+        }
     }
 
     public ApiResponse<StudentModel> createStudent(CreateAndUpdateStudent studentBody) {
@@ -57,8 +65,8 @@ public class StudentService {
             studentModel.setPhoneNumber(studentBody.phoneNumber());
             StudentModel response = studentRepository.save(studentModel);
             return new ApiResponse<>("Student created", response, HttpStatus.CREATED, Status.SUCCESS);
-        } catch (Exception e) {
-            return new ApiResponse<>(e.getMessage(), null, HttpStatus.BAD_REQUEST, Status.FAIL);
+        } catch (RuntimeException e) {
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
     }
 
@@ -72,8 +80,8 @@ public class StudentService {
         studentRes.setDeletedAt(LocalDateTime.now());
         studentRepository.save(studentRes);
         return new ApiResponse<>("Student deleted", null, HttpStatus.OK, Status.SUCCESS);
-        } catch (Exception e) {
-            return new ApiResponse<>(e.getMessage(), null, HttpStatus.BAD_REQUEST, Status.FAIL);
+        } catch (RuntimeException e) {
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
     }
 
@@ -96,8 +104,8 @@ public class StudentService {
         updateFieldIfNotNull(studentBody.phoneNumber(), studentData::setPhoneNumber);
         studentData.setUpdatedAt(LocalDateTime.now());
         return new ApiResponse<>("Student updated", studentRepository.save(studentData), HttpStatus.OK, Status.SUCCESS);
-        } catch (Exception e) {
-            return new ApiResponse<>(e.getMessage(), null, HttpStatus.BAD_REQUEST, Status.FAIL);
+        } catch (RuntimeException e) {
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
     }
 
@@ -108,19 +116,27 @@ public class StudentService {
     }
 
     public ApiResponse<List<StudentModel>> getStudentsByClassId(Long classId) {
+        try {
         return new ApiResponse<>("Students by class", studentRepository.findAllByStudentClassIdAndDeletedAtIsNull(classId), HttpStatus.OK, Status.SUCCESS);
+        } catch (RuntimeException e) {
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
+        }
     }
 
     public ApiResponse<List<StudentModel>> getStudentsByDepartment(Long departmentId) {
+        try {
         return new ApiResponse<>("Students by department", studentRepository.findAllByStudentClassDepartmentIdAndDeletedAtIsNull(departmentId), HttpStatus.OK, Status.SUCCESS);
+        } catch (RuntimeException e) {
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
+        }
     }
 
     public IsBlackListed isStudentBlackListed( CreateAndUpdateStudent requestBody) {
+        try {
         Map<String, String> student = new HashMap<>();
         student.put("firstName", requestBody.firstName());
         student.put("lastName", requestBody.lastName());
         student.put("dateOfBirth", requestBody.dateOfBirth().toString());
-        try {
             return webClient.post()
                     .uri("https://api.sokharithy.me/api/black-list-student")
                     .bodyValue(student)

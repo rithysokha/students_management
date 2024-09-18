@@ -24,15 +24,23 @@ public class ClassService {
 
     
     public ApiResponse<List<ClassModel>> getAllClasses() {
+        try {
         return new ApiResponse<>("All classes", classRepository.findAllByDeletedAtIsNull(), HttpStatus.OK, Status.SUCCESS);
+        } catch (RuntimeException e) {
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
+        }
     }
 
     public ApiResponse<ClassModel> getOneClassById(Long id) {
+        try {
         Optional<ClassModel> classOptional = classRepository.findById(id);
         if(classOptional.isPresent() && classOptional.get().getDeletedAt() == null){
             return new ApiResponse<>("Class found", classOptional.get(), HttpStatus.OK, Status.SUCCESS);
         }
         return  new ApiResponse<>("Class not found", null, HttpStatus.NOT_FOUND, Status.FAIL);
+        } catch (RuntimeException e) {
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
+        }
     }
 
     public ApiResponse<ClassModel> createClass(CreateAndUpdateClass classBody) {
@@ -46,8 +54,8 @@ public class ClassService {
             classModel.setCreatedAt(LocalDateTime.now());
             ClassModel response = classRepository.save(classModel);
             return new ApiResponse<>("New class created", response , HttpStatus.CREATED, Status.SUCCESS);
-        }catch (Exception e){
-            return new ApiResponse<>(e.getMessage(), null, HttpStatus.BAD_REQUEST, Status.FAIL);
+        }catch (RuntimeException e){
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
     }
 
@@ -62,7 +70,7 @@ public class ClassService {
             classRepository.save(classData);
             return new ApiResponse<>("Class with id " + id + " is deleted", classData, HttpStatus.OK, Status.SUCCESS);
         }catch (Exception e){
-            return new ApiResponse<>(e.getMessage(), null, HttpStatus.BAD_REQUEST, Status.FAIL);
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
     }
 
@@ -88,11 +96,15 @@ public class ClassService {
             classRepository.save(classData);
             return new ApiResponse<>("Class updated", classData, HttpStatus.OK, Status.SUCCESS);
         } catch (Exception e) {
-            return new ApiResponse<>(e.getMessage(), null, HttpStatus.BAD_REQUEST, Status.FAIL);
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
     }
 
     public ApiResponse<List<ClassModel>> getClassesByDepartmentId(Long departmentId) {
+        try {
         return new ApiResponse<>("Classes by department", classRepository.findAllByDepartmentIdAndDeletedAtIsNull(departmentId), HttpStatus.OK, Status.SUCCESS);
+        } catch (RuntimeException e) {
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
+        }
     }
 }
