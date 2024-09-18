@@ -1,4 +1,4 @@
 package com.student.student_management.dto;
 
-public record IsBlackListed (Boolean blackListed){
+public record IsBlackListed(Boolean blackListed) {
 }

@@ -9,6 +9,8 @@ import java.util.List;
 @Repository
 public interface StudentRepository extends JpaRepository<StudentModel, Long> {
     List<StudentModel> findAllByDeletedAtIsNull();
+
     List<StudentModel> findAllByStudentClassIdAndDeletedAtIsNull(Long classId);
+
     List<StudentModel> findAllByStudentClassDepartmentIdAndDeletedAtIsNull(Long departmentId);
 }

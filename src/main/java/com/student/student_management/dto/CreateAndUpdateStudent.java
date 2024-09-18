@@ -7,7 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-public record CreateAndUpdateStudent (
+public record CreateAndUpdateStudent(
         @NotBlank(message = "First name is required")
         @Size(max = 50, message = "First name must be less than 51 character")
         String firstName,
@@ -25,5 +25,5 @@ public record CreateAndUpdateStudent (
         @Size(min = 10, max = 12, message = "Phone number must be in range from 10 to 12 character")
         String phoneNumber
 
-){
+) {
 }

@@ -10,5 +10,6 @@ import java.util.List;
 public interface ClassRepository extends JpaRepository<ClassModel, Long> {
 
     List<ClassModel> findAllByDeletedAtIsNull();
+
     List<ClassModel> findAllByDepartmentIdAndDeletedAtIsNull(Long departmentId);
 }

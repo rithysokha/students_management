@@ -4,6 +4,7 @@ import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -60,7 +61,7 @@ public class CachedBodyHttpServletRequest extends HttpServletRequestWrapper {
         @Override
         public int read() throws IOException {
             try {
-            return byteArrayInputStream.read();
+                return byteArrayInputStream.read();
             } catch (Exception e) {
                 throw new IOException(e);
             }

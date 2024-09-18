@@ -22,7 +22,7 @@ public class DepartmentService {
 
     public ApiResponse<List<DepartmentModel>> getAllDepartments() {
         try {
-        return new ApiResponse<>("All department", departmentRepository.findAllByDeletedAtIsNull(), HttpStatus.OK, Status.SUCCESS);
+            return new ApiResponse<>("All department", departmentRepository.findAllByDeletedAtIsNull(), HttpStatus.OK, Status.SUCCESS);
         } catch (RuntimeException e) {
             return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
@@ -30,38 +30,38 @@ public class DepartmentService {
 
     public ApiResponse<DepartmentModel> getOneDepartmentById(Long id) {
         try {
-        Optional<DepartmentModel> departmentOptional = departmentRepository.findById(id);
-        if (departmentOptional.isPresent() && departmentOptional.get().getDeletedAt() == null){
-            return new ApiResponse<>("Department found", departmentOptional.get(), HttpStatus.OK, Status.SUCCESS);
-        }
-        return new ApiResponse<>("Department not found", null, HttpStatus.NOT_FOUND, Status.FAIL);
+            Optional<DepartmentModel> departmentOptional = departmentRepository.findById(id);
+            if (departmentOptional.isPresent() && departmentOptional.get().getDeletedAt() == null) {
+                return new ApiResponse<>("Department found", departmentOptional.get(), HttpStatus.OK, Status.SUCCESS);
+            }
+            return new ApiResponse<>("Department not found", null, HttpStatus.NOT_FOUND, Status.FAIL);
         } catch (RuntimeException e) {
             return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
     }
 
     public ApiResponse<DepartmentModel> createDepartment(CreateAndUpdateDepartment departmentBody) {
-        try{
+        try {
             DepartmentModel departmentModel = new DepartmentModel();
             departmentModel.setCreatedAt(LocalDateTime.now());
             departmentModel.setDepartmentName(departmentBody.departmentName());
             DepartmentModel response = departmentRepository.save(departmentModel);
             return new ApiResponse<>("New Department created", response, HttpStatus.OK, Status.SUCCESS);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
     }
 
     public ApiResponse<DepartmentModel> deleteDepartmentById(Long id) {
         try {
-        ApiResponse<DepartmentModel> departmentResponse = getOneDepartmentById(id);
-        if(departmentResponse.httpStatus() != HttpStatus.OK){
-            return departmentResponse;
-        }
-        DepartmentModel departmentData = departmentResponse.data();
-        departmentData.setDeletedAt(LocalDateTime.now());
-        departmentRepository.save(departmentData);
-        return new ApiResponse<>("Department deleted", null, HttpStatus.OK, Status.SUCCESS);
+            ApiResponse<DepartmentModel> departmentResponse = getOneDepartmentById(id);
+            if (departmentResponse.httpStatus() != HttpStatus.OK) {
+                return departmentResponse;
+            }
+            DepartmentModel departmentData = departmentResponse.data();
+            departmentData.setDeletedAt(LocalDateTime.now());
+            departmentRepository.save(departmentData);
+            return new ApiResponse<>("Department deleted", null, HttpStatus.OK, Status.SUCCESS);
         } catch (Exception e) {
             return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
@@ -71,7 +71,7 @@ public class DepartmentService {
     public ApiResponse<DepartmentModel> updateDepartmentById(Long id, CreateAndUpdateDepartment departmentBody) {
         try {
             ApiResponse<DepartmentModel> departmentResponse = getOneDepartmentById(id);
-            if(departmentResponse.httpStatus() != HttpStatus.OK){
+            if (departmentResponse.httpStatus() != HttpStatus.OK) {
                 return departmentResponse;
             }
             DepartmentModel departmentData = departmentResponse.data();
@@ -82,7 +82,7 @@ public class DepartmentService {
             departmentData.setUpdatedAt(LocalDateTime.now());
             departmentRepository.save(departmentData);
             return new ApiResponse<>("Department updated", departmentData, HttpStatus.OK, Status.SUCCESS);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
     }
