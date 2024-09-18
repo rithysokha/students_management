@@ -18,20 +18,20 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<String>> register(@RequestBody RegisterAndLogin registerBody){
         ApiResponse<String> response = authService.register(registerBody);
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, response.httpStatus());
     }
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<Token>> login(@RequestBody RegisterAndLogin loginBody){
         ApiResponse<Token> response = authService.login(loginBody);
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, response.httpStatus());
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<ApiResponse<Token>> refreshToken(HttpServletRequest request){
         String refreshToken = request.getHeader("Refresh-Token");
         ApiResponse<Token> response = authService.getRefreshToken(refreshToken);
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, response.httpStatus());
     }
 
 }

@@ -3,6 +3,7 @@ package com.student.student_management.service;
 import com.student.student_management.config.PasswordEncoderConfig;
 import com.student.student_management.dto.ApiResponse;
 import com.student.student_management.dto.RegisterAndLogin;
+import com.student.student_management.dto.Status;
 import com.student.student_management.dto.Token;
 import com.student.student_management.model.UserModel;
 import com.student.student_management.repository.UserRepository;
@@ -22,7 +23,7 @@ public class AuthService {
     public ApiResponse<String> register(RegisterAndLogin registerBody) {
         var user = userRepository.findByUsername(registerBody.username());
         if(user.isPresent()){
-            return new ApiResponse<>("user already exist", null, HttpStatus.BAD_REQUEST);
+            return new ApiResponse<>("user already exist", null, HttpStatus.BAD_REQUEST, Status.FAIL);
         }
         UserModel newUser = new UserModel();
         newUser.setUsername(registerBody.username());
@@ -30,7 +31,7 @@ public class AuthService {
         newUser.setCreatedAt(LocalDateTime.now());
         userRepository.save(newUser);
 
-        return new ApiResponse<>("User registered successfully", "Please use the credentials to login", HttpStatus.CREATED);
+        return new ApiResponse<>("User registered successfully", "Please use the credentials to login", HttpStatus.CREATED, Status.SUCCESS);
     }
 
     public ApiResponse<Token> login(RegisterAndLogin loginBody) {
@@ -40,17 +41,17 @@ public class AuthService {
                 Token token = new Token(
                         getToken(user.get().getUsername(), "access"),
                         getToken(user.get().getUsername(), "refresh"));
-                return new ApiResponse<>("Login successful", token, HttpStatus.OK);
+                return new ApiResponse<>("Login successful", token, HttpStatus.OK, Status.SUCCESS);
             }
         }
-        return new ApiResponse<>("Invalid credentials", null, HttpStatus.UNAUTHORIZED);
+        return new ApiResponse<>("Invalid credentials", null, HttpStatus.UNAUTHORIZED, Status.FAIL);
     }
 
     public ApiResponse<Token> getRefreshToken(String refreshToken) {
         String newAccessToken = jwtService.generateToken(userService.loadUserByUsername(jwtService.extractUsername(refreshToken)), "access");
         String newRefreshToken =jwtService.generateToken(userService.loadUserByUsername(jwtService.extractUsername(refreshToken)), "refresh");
         Token token = new Token(newAccessToken, newRefreshToken);
-        return new ApiResponse<>("Token refreshed", token, HttpStatus.OK);
+        return new ApiResponse<>("Token refreshed", token, HttpStatus.OK, Status.SUCCESS);
     }
     private String getToken(String username, String type) {
         return jwtService.generateToken(userService.loadUserByUsername(username), type);

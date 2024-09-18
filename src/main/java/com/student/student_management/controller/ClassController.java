@@ -20,35 +20,35 @@ public class ClassController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<ClassModel>>> getAllClasses(){
         ApiResponse<List<ClassModel>> response = classService.getAllClasses();
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, response.httpStatus());
     }
 
     @GetMapping("/by-department")
     public ResponseEntity<ApiResponse<List<ClassModel>>> getClassesByDepartmentId(@RequestParam Long departmentId){
         ApiResponse<List<ClassModel>> response = classService.getClassesByDepartmentId(departmentId);
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, response.httpStatus());
     }
     @GetMapping("{id}")
     public ResponseEntity<ApiResponse<ClassModel>> getOneClassById(@PathVariable Long id){
         ApiResponse<ClassModel> response = classService.getOneClassById(id);
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, response.httpStatus());
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<ClassModel>> createClass(@Valid @RequestBody CreateAndUpdateClass classBody){
         ApiResponse<ClassModel> response = classService.createClass(classBody);
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, response.httpStatus());
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<ApiResponse<ClassModel>> deleteClass(@PathVariable Long id){
         ApiResponse<ClassModel> response = classService.deleteClassById(id);
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, response.httpStatus());
     }
 
     @PutMapping("{id}")
     public ResponseEntity<ApiResponse<ClassModel>> updateClassById(@PathVariable Long id,@Valid @RequestBody CreateAndUpdateClass classBody){
         ApiResponse<ClassModel> response = classService.updateClassById(id, classBody);
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, response.httpStatus());
     }
 }
