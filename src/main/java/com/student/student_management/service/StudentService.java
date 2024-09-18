@@ -2,6 +2,7 @@ package com.student.student_management.service;
 
 import com.student.student_management.dto.ApiResponse;
 import com.student.student_management.dto.CreateAndUpdateStudent;
+import com.student.student_management.dto.IsBlackListed;
 import com.student.student_management.model.ClassModel;
 import com.student.student_management.model.StudentModel;
 import com.student.student_management.repository.ClassRepository;
@@ -10,9 +11,13 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -20,7 +25,7 @@ import java.util.Optional;
 public class StudentService {
     private final StudentRepository studentRepository;
     private final ClassRepository classRepository;
-
+    private final WebClient webClient;
     public ApiResponse<List<StudentModel>> getAllStudents() {
         return new ApiResponse<>("All students", studentRepository.findAllByDeletedAtIsNull(), HttpStatus.OK);
     }
@@ -35,6 +40,9 @@ public class StudentService {
 
     public ApiResponse<StudentModel> createStudent(CreateAndUpdateStudent studentBody) {
         try {
+            if(isStudentBlackListed(studentBody).blackListed()){
+                return new ApiResponse<>("Student is in black list", null, HttpStatus.OK);
+            }
             StudentModel studentModel = new StudentModel();
             Optional<ClassModel> classOptional = classRepository.findById(studentBody.classId());
             studentModel.setCreatedAt(LocalDateTime.now());
@@ -104,5 +112,22 @@ public class StudentService {
 
     public ApiResponse<List<StudentModel>> getStudentsByDepartment(Long departmentId) {
         return new ApiResponse<>("Students by department", studentRepository.findAllByStudentClassDepartmentIdAndDeletedAtIsNull(departmentId), HttpStatus.OK);
+    }
+
+    public IsBlackListed isStudentBlackListed( CreateAndUpdateStudent requestBody) {
+        Map<String, String> student = new HashMap<>();
+        student.put("firstName", requestBody.firstName());
+        student.put("lastName", requestBody.lastName());
+        student.put("dateOfBirth", requestBody.dateOfBirth().toString());
+        try {
+            return webClient.post()
+                    .uri("https://api.sokharithy.me/api/black-list-student")
+                    .bodyValue(student)
+                    .retrieve()
+                    .bodyToMono(IsBlackListed.class)
+                    .block();
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
     }
 }

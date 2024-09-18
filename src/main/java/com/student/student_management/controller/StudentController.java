@@ -2,20 +2,24 @@ package com.student.student_management.controller;
 
 import com.student.student_management.dto.ApiResponse;
 import com.student.student_management.dto.CreateAndUpdateStudent;
+import com.student.student_management.dto.IsBlackListed;
 import com.student.student_management.model.StudentModel;
 import com.student.student_management.service.StudentService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/student")
 @AllArgsConstructor
 public class StudentController {
    private final StudentService studentService;
+
 
    @GetMapping
    public ResponseEntity<ApiResponse<List<StudentModel>>> getAllStudents(){
