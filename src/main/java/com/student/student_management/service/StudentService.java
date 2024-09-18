@@ -50,7 +50,7 @@ public class StudentService {
     public ApiResponse<StudentModel> createStudent(CreateAndUpdateStudent studentBody) {
         try {
             if(isStudentBlackListed(studentBody).blackListed()){
-                return new ApiResponse<>("Student is in black list", null, HttpStatus.OK, Status.SUCCESS);
+                return new ApiResponse<>("Student is in black list", null, HttpStatus.OK, Status.FAIL);
             }
             StudentModel studentModel = new StudentModel();
             Optional<ClassModel> classOptional = classRepository.findById(studentBody.classId());
