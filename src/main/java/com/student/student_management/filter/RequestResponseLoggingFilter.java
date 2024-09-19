@@ -39,7 +39,7 @@ public class RequestResponseLoggingFilter implements Filter {
                     .lines()
                     .collect(Collectors.joining("\n"));
             String username;
-            try{
+            try {
                 username = httpRequest.getUserPrincipal().getName();
             } catch (Exception e) {
                 username = "Unauthenticated user";
