@@ -1,9 +1,9 @@
 package com.student.student_management.service;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +16,8 @@ import java.util.Map;
 
 @Service
 public class JwtService {
-    private final String secret = Dotenv.load().get("JWT_SECRET");
-    private final UserService userService;
-
-    public JwtService(UserService userService) {
-        this.userService = userService;
-    }
+    @Value("${student.jwt-secret}")
+    private String secret;
 
     public String generateToken(UserDetails userDetails, String tokenType) {
         Map<String, String> claims = new HashMap<>();
