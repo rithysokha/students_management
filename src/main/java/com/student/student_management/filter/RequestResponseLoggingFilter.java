@@ -38,12 +38,18 @@ public class RequestResponseLoggingFilter implements Filter {
             String requestBody = new BufferedReader(new InputStreamReader(cachedBodyHttpServletRequest.getInputStream(), StandardCharsets.UTF_8))
                     .lines()
                     .collect(Collectors.joining("\n"));
-            logger.info("Request: {} {} User: {} Body: {}", httpRequest.getMethod(), httpRequest.getRequestURI(), httpRequest.getUserPrincipal().getName(), requestBody);
+            String username;
+            try{
+                username = httpRequest.getUserPrincipal().getName();
+            } catch (Exception e) {
+                username = "Unauthenticated user";
+            }
+            logger.info("Request: {} {}, User: {}, Body: {}", httpRequest.getMethod(), httpRequest.getRequestURI(), username, requestBody);
 
             chain.doFilter(cachedBodyHttpServletRequest, cachedBodyHttpServletResponse);
 
             String responseBody = new String(cachedBodyHttpServletResponse.getCachedBody(), StandardCharsets.UTF_8);
-            logger.info("Response: {} {} Body: {}", httpResponse.getStatus(), httpRequest.getRequestURI(), responseBody);
+            logger.info("Response: {} {}, Body: {}", httpResponse.getStatus(), httpRequest.getRequestURI(), responseBody);
 
             // Write the cached response body back to the original response
             httpResponse.getOutputStream().write(cachedBodyHttpServletResponse.getCachedBody());
