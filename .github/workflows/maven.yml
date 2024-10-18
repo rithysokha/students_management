@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Student transcript 
 
 on:
   push:
@@ -26,10 +26,10 @@ jobs:
       run: mvn clean package
 
     - name: Build Docker image
-      run: docker build -t studenttranscript:latest .
+      run: docker build -t student:latest .
 
     - name: Deploy Docker container
       run: |
-        docker stop testcicd || true
-        docker rm testcicd || true
+        docker stop student || true
+        docker rm student || true
         docker run -d -p 8080:8080 --name testcicd testcicd:latest
