@@ -33,4 +33,4 @@ jobs:
       run: |
         docker stop student || true
         docker rm student || true
-        docker run -d -p 8080:8080 --name testcicd testcicd:latest
+        docker run -d -p 8080:8080 --name studentApi student:latest
