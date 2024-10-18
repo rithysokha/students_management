@@ -21,7 +21,8 @@ jobs:
         java-version: '22'
         distribution: 'temurin'
         cache: maven
-
+    - name: Copy secret.properties to project
+      run: cp /home/thy/secret.properties /home/thy/actions-runner/_work/students_management/students_management/src/main/resources
     - name: Build with Maven
       run: mvn clean package
 
