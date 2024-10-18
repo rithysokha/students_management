@@ -10,9 +10,9 @@ import java.util.List;
 public interface StudentRepository extends JpaRepository<StudentModel, Long> {
     List<StudentModel> findAllByDeletedAtIsNull();
 
-    List<StudentModel> findAllByStudentClassIdAndDeletedAtIsNull(Long classId);
+    List<StudentModel> findAllByStudentMajorIdAndDeletedAtIsNull(Long majorId);
 
-    List<StudentModel> findAllByStudentClassDepartmentIdAndDeletedAtIsNull(Long departmentId);
+    List<StudentModel> findAllByStudentMajorDepartmentIdAndDeletedAtIsNull(Long departmentId);
 
     Boolean existsByPhoneNumber(String phoneNumber);
 }

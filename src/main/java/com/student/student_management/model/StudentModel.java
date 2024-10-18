@@ -26,9 +26,9 @@ public class StudentModel {
     @Column(name = "phone_number", nullable = false, unique = true, length = 12)
     private String phoneNumber;
     @ManyToOne
-    @JoinColumn(name = "class_id", referencedColumnName = "id")
+    @JoinColumn(name = "major_id", referencedColumnName = "id")
     @JsonIgnore
-    private ClassModel studentClass;
+    private MajorModel studentMajor;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
     @Column(name = "updated_at")

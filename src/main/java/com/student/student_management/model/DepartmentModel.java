@@ -20,7 +20,7 @@ public class DepartmentModel {
     @JoinColumn(name = "department_id", referencedColumnName = "id")
     @JsonManagedReference
     @JsonIgnore
-    private List<ClassModel> classes;
+    private List<MajorModel> classes;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
     @Column(name = "updated_at")

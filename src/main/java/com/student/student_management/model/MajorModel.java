@@ -9,19 +9,19 @@ import java.util.List;
 
 
 @Data
-@Entity(name = "class")
-public class ClassModel {
+@Entity(name = "major")
+public class MajorModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "class_name", length = 20, nullable = false, unique = true)
-    private String className;
+    @Column(name = "major_name", length = 20, nullable = false, unique = true)
+    private String majorName;
     @ManyToOne
     @JoinColumn(name = "department_id", referencedColumnName = "id")
     @JsonIgnore
     private DepartmentModel department;
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "class_id", referencedColumnName = "id")
+    @JoinColumn(name = "major_id", referencedColumnName = "id")
     @JsonIgnore
     private List<StudentModel> students;
     @Column(name = "created_at", nullable = false)
