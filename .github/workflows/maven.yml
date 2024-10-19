@@ -30,6 +30,6 @@ jobs:
 
     - name: Deploy Docker container
       run: |
-        docker stop student || true
-        docker rm student || true
+        docker stop studentApi || true
+        docker rm studentApi || true
         docker run -d -p 8080:8080 --name studentApi student:latest
