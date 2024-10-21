@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorizeHttp -> {
                             authorizeHttp.requestMatchers("/auth/login").permitAll();
-                            authorizeHttp.anyRequest().permitAll();
+                            authorizeHttp.anyRequest().authenticated();
                         }
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
