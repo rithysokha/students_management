@@ -55,18 +55,6 @@ public class AuthService {
             return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
     }
-
-    public ApiResponse<Token> getRefreshToken(String refreshToken) {
-        try {
-            String newAccessToken = jwtService.generateToken(userService.loadUserByUsername(jwtService.extractUsername(refreshToken)), "access");
-            String newRefreshToken = jwtService.generateToken(userService.loadUserByUsername(jwtService.extractUsername(refreshToken)), "refresh");
-            Token token = new Token(newAccessToken, newRefreshToken);
-            return new ApiResponse<>("Token refreshed", token, HttpStatus.OK, Status.SUCCESS);
-        } catch (RuntimeException e) {
-            return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
-        }
-    }
-
     private String getToken(String username, String type) {
         try {
             return jwtService.generateToken(userService.loadUserByUsername(username), type);

@@ -4,7 +4,6 @@ import com.student.student_management.dto.ApiResponse;
 import com.student.student_management.dto.RegisterAndLogin;
 import com.student.student_management.dto.Token;
 import com.student.student_management.service.AuthService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,11 +29,8 @@ public class AuthController {
         return new ResponseEntity<>(response, response.httpStatus());
     }
 
-    @PostMapping("/refresh")
-    public ResponseEntity<ApiResponse<Token>> refreshToken(HttpServletRequest request) {
-        String refreshToken = request.getHeader("Refresh-Token");
-        ApiResponse<Token> response = authService.getRefreshToken(refreshToken);
-        return new ResponseEntity<>(response, response.httpStatus());
+    @PostMapping("/validate")
+    public ResponseEntity<Void> validateAuth() {
+        return ResponseEntity.ok().build();
     }
-
 }
