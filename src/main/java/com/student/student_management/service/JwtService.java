@@ -26,7 +26,7 @@ public class JwtService {
                 .subject(userDetails.getUsername())
                 .claims(claims)
                 .issuedAt(Date.from(Instant.now()))
-                .expiration(Date.from(Instant.now().plusSeconds(tokenType.equals("access") ? 3600 : 3600 * 24 * 7)))
+                .expiration(Date.from(Instant.now().plusSeconds(3600)))
                 .signWith(generateKey())
                 .compact();
     }
