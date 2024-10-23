@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,7 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final MajorRepository majorRepository;
     private final WebClient webClient;
+    private final ExcelService excelService;
 
     public ApiResponse<List<StudentModel>> getAllStudents() {
         try {
@@ -151,6 +153,15 @@ public class StudentService {
                     .block();
         } catch (Exception e) {
             throw new RuntimeException();
+        }
+    }
+
+    public ApiResponse<List<StudentModel>> createStudentByUploadExcel(InputStream inputStream) {
+        try {
+            List<StudentModel> studentList = excelService.createStudents(inputStream);
+            return new ApiResponse<>("Success", studentList, HttpStatus.CREATED, Status.SUCCESS);
+        } catch (Exception e) {
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
     }
 }

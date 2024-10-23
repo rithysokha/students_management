@@ -8,7 +8,9 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -58,5 +60,15 @@ public class StudentController {
     public ResponseEntity<ApiResponse<StudentModel>> updateStudentById(@PathVariable Long id, @Valid @RequestBody CreateAndUpdateStudent studentBody) {
         ApiResponse<StudentModel> response = studentService.updateStudentById(id, studentBody);
         return new ResponseEntity<>(response, response.httpStatus());
+    }
+    @PostMapping("/excel")
+    public ResponseEntity<ApiResponse<List<StudentModel>>> createStudentByUploadExcel(@Valid @RequestParam("file") MultipartFile file ) {
+        try {
+            InputStream inputStream = file.getInputStream();
+            ApiResponse<List<StudentModel>> response = studentService.createStudentByUploadExcel(inputStream);
+        return new ResponseEntity<>(response, response.httpStatus());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
     }
 }

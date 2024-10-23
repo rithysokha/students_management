@@ -1,18 +1,24 @@
 package com.student.student_management.service;
 
+import com.student.student_management.model.StudentModel;
+import com.student.student_management.repository.StudentRepository;
+import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class ExcelService {
-
+private final StudentRepository studentRepository;
     public List<Map<String, String>> readExcel(InputStream inputStream) {
         List<Map<String, String>> result = new ArrayList<>();
 
@@ -26,7 +32,7 @@ public class ExcelService {
                 if (row == null) continue;
 
                 Map<String, String> rowData = new HashMap<>();
-                for (int j = 0; j < numberOfColumns; j++) {
+                for (int j = 1; j < numberOfColumns; j++) { // Start from column 1 skipping "No"
                     Cell headerCell = headerRow.getCell(j);
                     Cell cell = row.getCell(j);
 
@@ -40,7 +46,6 @@ public class ExcelService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return result;
     }
 
@@ -64,6 +69,22 @@ public class ExcelService {
             default:
                 return "";
         }
+    }
+
+    protected List<StudentModel> createStudents(InputStream inputStream) {
+        List<Map<String, String>> studentList = readExcel(inputStream);
+        List<StudentModel> studentModelList = new ArrayList<>();
+        for(Map<String, String> student: studentList){
+            StudentModel studentModel = new StudentModel();
+            studentModel.setFirstName(student.get("First Name"));
+            studentModel.setLastName(student.get("Last Name"));
+            studentModel.setPhoneNumber(student.get("Phone Number"));
+            studentModel.setAddress(student.get("POB"));
+            studentModel.setDateOfBirth(LocalDate.now());
+            studentModel.setCreatedAt(LocalDateTime.now());
+            studentModelList.add(studentModel);
+        }
+        return studentRepository.saveAll(studentModelList);
     }
 }
 
