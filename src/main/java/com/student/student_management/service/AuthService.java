@@ -45,8 +45,7 @@ public class AuthService {
             if (user.isPresent()) {
                 if (passwordEncoder.passwordEncoder().matches(loginBody.password(), user.get().getPassword())) {
                     Token token = new Token(
-                            getToken(user.get().getUsername(), "access"),
-                            getToken(user.get().getUsername(), "refresh"));
+                            getToken(user.get().getUsername()));
                     return new ApiResponse<>("Login successful", token, HttpStatus.OK, Status.SUCCESS);
                 }
             }
@@ -55,9 +54,9 @@ public class AuthService {
             return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
     }
-    private String getToken(String username, String type) {
+    private String getToken(String username) {
         try {
-            return jwtService.generateToken(userService.loadUserByUsername(username), type);
+            return jwtService.generateToken(userService.loadUserByUsername(username));
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
