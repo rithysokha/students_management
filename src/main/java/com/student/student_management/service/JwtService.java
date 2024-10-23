@@ -19,14 +19,13 @@ public class JwtService {
     @Value("${student.jwt-secret}")
     private String secret;
 
-    public String generateToken(UserDetails userDetails, String tokenType) {
+    public String generateToken(UserDetails userDetails) {
         Map<String, String> claims = new HashMap<>();
-        claims.put("type", tokenType);
         return Jwts.builder()
                 .subject(userDetails.getUsername())
                 .claims(claims)
                 .issuedAt(Date.from(Instant.now()))
-                .expiration(Date.from(Instant.now().plusSeconds(3600)))
+                .expiration(Date.from(Instant.now().plusSeconds(8*3600)))
                 .signWith(generateKey())
                 .compact();
     }
@@ -49,8 +48,8 @@ public class JwtService {
                 .getPayload();
     }
 
-    public boolean isTokenValid(String jwt, String tokenType) {
+    public boolean isTokenValid(String jwt) {
         Claims claims = getClaims(jwt);
-        return claims.getExpiration().after(Date.from(Instant.now())) && tokenType.equals(claims.get("type"));
+        return claims.getExpiration().after(Date.from(Instant.now()));
     }
 }
