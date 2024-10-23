@@ -19,6 +19,6 @@ public class GlobalExceptionHandler {
             errors.put("message", error.getDefaultMessage());
             errors.put("status", "fail");
         });
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errors, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
