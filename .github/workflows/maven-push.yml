@@ -1,4 +1,4 @@
-name: Student transcript 
+name: Merge check 
 
 on:
   push:
