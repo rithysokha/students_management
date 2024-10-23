@@ -21,6 +21,10 @@ jobs:
         java-version: '22'
         distribution: 'temurin'
         cache: maven
+    - name: Stop and remove old container
+      run: |
+        docker stop studentApi || true
+        docker rm studentApi || true
         
     - name: Build with Maven
       run: mvn clean package
@@ -29,7 +33,4 @@ jobs:
       run: docker build -t student:latest .
 
     - name: Deploy Docker container
-      run: |
-        docker stop studentApi || true
-        docker rm studentApi || true
-        docker run -d -p 8080:8080 --name studentApi student:latest
+      run: docker run -d -p 8080:8080 --name studentApi student:latest
