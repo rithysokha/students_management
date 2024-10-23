@@ -17,6 +17,7 @@ public class UserModel {
     private String username;
     @Column(name = "password", length = 512, nullable = false)
     private String password;
+    private Role role;
     @CreatedDate
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

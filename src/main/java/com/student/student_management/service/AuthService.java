@@ -1,10 +1,7 @@
 package com.student.student_management.service;
 
 import com.student.student_management.config.PasswordEncoderConfig;
-import com.student.student_management.dto.ApiResponse;
-import com.student.student_management.dto.RegisterAndLogin;
-import com.student.student_management.dto.Status;
-import com.student.student_management.dto.Token;
+import com.student.student_management.dto.*;
 import com.student.student_management.model.UserModel;
 import com.student.student_management.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,15 +18,16 @@ public class AuthService {
     private final UserService userService;
     private final JwtService jwtService;
 
-    public ApiResponse<String> register(RegisterAndLogin registerBody) {
+    public ApiResponse<String> register(Register registerBody) {
         try {
             var user = userRepository.findByUsername(registerBody.username());
             if (user.isPresent()) {
-                return new ApiResponse<>("user already exist", null, HttpStatus.BAD_REQUEST, Status.FAIL);
+                return new ApiResponse<>("Username already been used", null, HttpStatus.CONFLICT, Status.FAIL);
             }
             UserModel newUser = new UserModel();
             newUser.setUsername(registerBody.username());
             newUser.setPassword(passwordEncoder.passwordEncoder().encode(registerBody.password()));
+            newUser.setRole(registerBody.role());
             newUser.setCreatedAt(LocalDateTime.now());
             userRepository.save(newUser);
 
@@ -39,7 +37,7 @@ public class AuthService {
         }
     }
 
-    public ApiResponse<Token> login(RegisterAndLogin loginBody) {
+    public ApiResponse<Token> login(Login loginBody) {
         try {
             var user = userRepository.findByUsername(loginBody.username());
             if (user.isPresent()) {

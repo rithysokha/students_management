@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(
                         authorizeHttp -> {
+                            authorizeHttp.requestMatchers("/auth/register").hasAuthority("ADMIN");
                             authorizeHttp.requestMatchers("/auth/login").permitAll();
                             authorizeHttp.anyRequest().authenticated();
                         }

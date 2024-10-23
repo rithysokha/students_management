@@ -24,6 +24,7 @@ public class UserService implements UserDetailsService {
             return User.builder()
                     .username(userModel.getUsername())
                     .password(userModel.getPassword())
+                    .authorities(userModel.getRole().name())
                     .build();
         }
         throw new UsernameNotFoundException("Invalid credentials");
