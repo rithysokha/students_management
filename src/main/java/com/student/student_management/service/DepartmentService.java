@@ -46,7 +46,6 @@ public class DepartmentService {
                 return new ApiResponse<>("Department name is taken", null, HttpStatus.CONFLICT, Status.FAIL);
             }
             DepartmentModel departmentModel = new DepartmentModel();
-            departmentModel.setCreatedAt(LocalDateTime.now());
             departmentModel.setDepartmentName(departmentBody.departmentName());
             DepartmentModel response = departmentRepository.save(departmentModel);
             return new ApiResponse<>("New Department created", response, HttpStatus.OK, Status.SUCCESS);

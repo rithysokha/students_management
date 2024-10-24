@@ -54,7 +54,6 @@ public class MajorService {
                 return new ApiResponse<>("Department not found", null, HttpStatus.NOT_FOUND, Status.FAIL);
             majorModel.setDepartment(departmentOptional.get());
             majorModel.setMajorName(classBody.majorName());
-            majorModel.setCreatedAt(LocalDateTime.now());
             MajorModel response = majorRepository.save(majorModel);
             return new ApiResponse<>("New major created", response, HttpStatus.CREATED, Status.SUCCESS);
         } catch (RuntimeException e) {
