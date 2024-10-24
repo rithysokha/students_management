@@ -70,7 +70,6 @@ public class FacultyService {
         try {
             FacultyModel facultyModel = new FacultyModel();
             facultyModel.setFacultyName(body.facultyName());
-            facultyModel.setCreatedAt(LocalDateTime.now());
             var faculty = facultyRepository.save(facultyModel);
             return new ApiResponse<>("Faculty created", faculty, HttpStatus.CREATED, Status.SUCCESS);
         }catch (Exception e){

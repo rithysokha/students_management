@@ -39,9 +39,7 @@ public class CourseService {
 
     public ApiResponse<CourseModel> createNewCourse(@Valid CreateAndUpdateCourse body) {
         try{
-            CourseModel courseModel = new CourseModel();
-            courseModel.setCourseName(body.courseName());
-            courseModel.setMaxCredit(body.maxCredit());
+            CourseModel courseModel = new CourseModel(body.effectiveFrom(), body.effectiveUntil(),body.courseName(), body.maxCredit());
             var newCourse = courseRepository.save(courseModel);
             return new ApiResponse<>("Course created", newCourse, HttpStatus.CREATED, Status.SUCCESS);
         } catch (Exception e) {

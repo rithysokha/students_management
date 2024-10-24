@@ -3,8 +3,9 @@ package com.student.student_management.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,7 +13,9 @@ import java.util.List;
 
 @Data
 @Entity(name = "course")
+@NoArgsConstructor
 public class CourseModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,12 +26,19 @@ public class CourseModel {
     @JsonIgnore
     @ManyToMany(mappedBy = "courses")
     private List<MajorModel> students;
-    @CreatedDate
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
-    @LastModifiedDate
+    @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    public CourseModel(LocalDate effectiveFrom, LocalDate effectiveUntil, String courseName, Float maxCredit) {
+        this.effectiveFrom = effectiveFrom;
+        this.effectiveUntil = effectiveUntil;
+        this.courseName = courseName;
+        this.maxCredit = maxCredit;
+    }
 }

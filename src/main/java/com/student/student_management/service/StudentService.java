@@ -51,7 +51,6 @@ public class StudentService {
             }
             StudentModel studentModel = new StudentModel();
             Optional<MajorModel> classOptional = majorRepository.findById(studentBody.classId());
-            studentModel.setCreatedAt(LocalDateTime.now());
             studentModel.setFirstName(studentBody.firstName());
             studentModel.setLastName(studentBody.lastName());
             studentModel.setDateOfBirth(studentBody.dateOfBirth());
