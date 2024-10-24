@@ -12,4 +12,5 @@ public interface FacultyRepository extends JpaRepository<FacultyModel, Long> {
     List<FacultyModel> findAllByDeletedAtIsNull();
 
     Optional<FacultyModel> findByIdAndDeletedAtIsNull(Long id);
+    Optional<FacultyModel> findByFacultyName(String facultyName);
 }

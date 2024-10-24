@@ -17,6 +17,7 @@ public class CourseModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String courseName;
+    private Float maxCredit;
     private LocalDate effectiveFrom;
     private LocalDate effectiveUntil;
     @JsonIgnore
