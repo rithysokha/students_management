@@ -43,13 +43,13 @@ public class FacultyController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<FacultyModel>> createFaculty(@RequestBody @Valid CreateAndUpdateFaculty body){
+    public ResponseEntity<ApiResponse<FacultyModel>> createFaculty(@Valid @RequestBody CreateAndUpdateFaculty body){
         ApiResponse<FacultyModel> response = facultyService.createFaculty(body);
         return new ResponseEntity<>(response, response.httpStatus());
     }
 
     @PostMapping("/multiple")
-    public ResponseEntity<ApiResponse<List<FacultyModel>>> createFaculty(@RequestBody @Valid CreateMultipleFaculty body){
+    public ResponseEntity<ApiResponse<List<FacultyModel>>> createMultipleFaculty(@RequestBody @Valid CreateMultipleFaculty body){
         ApiResponse<List<FacultyModel>> response = facultyService.createMultipleFaculty(body);
         return new ResponseEntity<>(response, response.httpStatus());
     }
