@@ -23,7 +23,6 @@ public class ExcelService {
 private final StudentRepository studentRepository;
 private final ScoreRepository scoreRepository;
 private final CourseService courseService;
-private final StudentService studentService;
     public List<Map<String, String>> readExcel(InputStream inputStream) {
         List<Map<String, String>> result = new ArrayList<>();
 
@@ -77,6 +76,7 @@ private final StudentService studentService;
     }
 
     protected List<StudentModel> createStudents(InputStream inputStream) {
+        try {
         List<Map<String, String>> studentList = readExcel(inputStream);
         List<StudentModel> studentModelList = new ArrayList<>();
         for(Map<String, String> student: studentList){
@@ -91,17 +91,28 @@ private final StudentService studentService;
             studentModelList.add(studentModel);
         }
         return studentRepository.saveAll(studentModelList);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
     protected List<ScoreModel> createScores(InputStream inputStream){
-        List<Map<String, String>> scoreList = readExcel(inputStream);
-        List<ScoreModel> scoreModelList = new ArrayList<>();
-        for(Map<String, String> score : scoreList){
-            scoreModelList.add(new ScoreModel(
-                                                Float.parseFloat(score.get("Score")),
-                                                courseService.getCourseByCode("Course Code").data(),
-                                                studentService.getOneStudentByEmail("Email").data()));
+        try {
+            List<Map<String, String>> scoreList = readExcel(inputStream);
+            List<ScoreModel> scoreModelList = new ArrayList<>();
+            for (Map<String, String> score : scoreList) {
+                var student = studentRepository.findByEmail(score.get("Email"));
+                if (student.isEmpty()) {
+                    throw new NullPointerException();
+                }
+                scoreModelList.add(new ScoreModel(
+                        Float.parseFloat(score.get("Score")),
+                        courseService.getCourseByCode(score.get("Course Code")).data(),
+                        student.get()));
+            }
+            return scoreRepository.saveAll(scoreModelList);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return scoreRepository.saveAll(scoreModelList);
     }
 }
 
