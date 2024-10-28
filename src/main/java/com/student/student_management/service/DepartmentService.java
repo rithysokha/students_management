@@ -4,7 +4,9 @@ import com.student.student_management.dto.ApiResponse;
 import com.student.student_management.dto.CreateAndUpdateDepartment;
 import com.student.student_management.dto.Status;
 import com.student.student_management.model.DepartmentModel;
+import com.student.student_management.model.FacultyModel;
 import com.student.student_management.repository.DepartmentRepository;
+import com.student.student_management.repository.FacultyRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class DepartmentService {
     private final DepartmentRepository departmentRepository;
+    private final FacultyRepository facultyRepository;
 
 
     public ApiResponse<List<DepartmentModel>> getAllDepartments() {
@@ -45,9 +48,11 @@ public class DepartmentService {
             if (departmentRepository.existsByDepartmentName(departmentBody.departmentName())) {
                 return new ApiResponse<>("Department name is taken", null, HttpStatus.CONFLICT, Status.FAIL);
             }
-            DepartmentModel departmentModel = new DepartmentModel();
-            departmentModel.setDepartmentName(departmentBody.departmentName());
-            DepartmentModel response = departmentRepository.save(departmentModel);
+            Optional<FacultyModel> facultyModelOptional = facultyRepository.findById(departmentBody.facultyId());
+            if (facultyModelOptional.isEmpty()) {
+                return new ApiResponse<>("Faculty not found", null, HttpStatus.NOT_FOUND, Status.FAIL);
+            }
+            DepartmentModel response = departmentRepository.save(new DepartmentModel(departmentBody.departmentName(), facultyModelOptional.get()));
             return new ApiResponse<>("New Department created", response, HttpStatus.OK, Status.SUCCESS);
         } catch (Exception e) {
             return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
@@ -72,6 +77,10 @@ public class DepartmentService {
     @Transactional
     public ApiResponse<DepartmentModel> updateDepartmentById(Long id, CreateAndUpdateDepartment departmentBody) {
         try {
+            Optional<FacultyModel> facultyModelOptional = facultyRepository.findById(departmentBody.facultyId());
+            if (facultyModelOptional.isEmpty()) {
+                return new ApiResponse<>("Faculty not found", null, HttpStatus.NOT_FOUND, Status.FAIL);
+            }
             if (departmentRepository.existsByDepartmentName(departmentBody.departmentName())) {
                 return new ApiResponse<>("Department name is taken", null, HttpStatus.CONFLICT, Status.FAIL);
             }
@@ -84,6 +93,7 @@ public class DepartmentService {
             if (departmentBody.departmentName() != null && !departmentBody.departmentName().isEmpty()) {
                 departmentData.setDepartmentName(departmentBody.departmentName());
             }
+            departmentData.setFaculty(facultyModelOptional.get());
             departmentData.setUpdatedAt(LocalDateTime.now());
             departmentRepository.save(departmentData);
             return new ApiResponse<>("Department updated", departmentData, HttpStatus.OK, Status.SUCCESS);

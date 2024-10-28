@@ -3,6 +3,7 @@ package com.student.student_management.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Data
 @Entity(name = "major")
+@NoArgsConstructor
 public class MajorModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,4 +43,9 @@ public class MajorModel {
     private LocalDateTime updatedAt;
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    public MajorModel(String majorName, DepartmentModel department) {
+        this.majorName = majorName;
+        this.department = department;
+    }
 }
