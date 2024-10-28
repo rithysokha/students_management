@@ -43,6 +43,17 @@ public class StudentService {
             return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
     }
+    public ApiResponse<StudentModel> getOneStudentByEmail(String email) {
+        try {
+            Optional<StudentModel> studenOptional = studentRepository.findByEmail(email);
+            if (studenOptional.isPresent() && studenOptional.get().getDeletedAt() == null) {
+                return new ApiResponse<>("Student found", studenOptional.get(), HttpStatus.OK, Status.SUCCESS);
+            }
+            return new ApiResponse<>("Student not found", null, HttpStatus.NOT_FOUND, Status.FAIL);
+        } catch (RuntimeException e) {
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
+        }
+    }
 
     public ApiResponse<StudentModel> createStudent(CreateAndUpdateStudent studentBody) {
         try {

@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity(name = "student")
@@ -27,10 +28,16 @@ public class StudentModel {
     private String address;
     @Column(name = "phone_number", nullable = false, unique = true, length = 12)
     private String phoneNumber;
+    @Column(name = "email", nullable = false, unique = true, length = 12)
+    private String email;
     @ManyToOne
     @JoinColumn(name = "major_id", referencedColumnName = "id")
     @JsonIgnore
     private MajorModel studentMajor;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "student_id", referencedColumnName = "id")
+    @JsonIgnore
+    private List<ScoreModel> scores;
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

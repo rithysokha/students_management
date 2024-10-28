@@ -36,6 +36,14 @@ public class CourseService {
             return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
     }
+    public ApiResponse<CourseModel> getCourseByCode(String code) {
+        try{
+            Optional<CourseModel> course = courseRepository.findByCode(code);
+            return course.map(courseModel -> new ApiResponse<>("Course with id " + code, courseModel, HttpStatus.OK, Status.SUCCESS)).orElseGet(() -> new ApiResponse<>("Course not found", null, HttpStatus.NOT_FOUND, Status.FAIL));
+        } catch (Exception e) {
+            return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
+        }
+    }
 
     public ApiResponse<CourseModel> createNewCourse(@Valid CreateAndUpdateCourse body) {
         try{

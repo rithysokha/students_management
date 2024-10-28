@@ -1,6 +1,8 @@
 package com.student.student_management.service;
 
+import com.student.student_management.model.ScoreModel;
 import com.student.student_management.model.StudentModel;
+import com.student.student_management.repository.ScoreRepository;
 import com.student.student_management.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
@@ -19,6 +21,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ExcelService {
 private final StudentRepository studentRepository;
+private final ScoreRepository scoreRepository;
+private final CourseService courseService;
+private final StudentService studentService;
     public List<Map<String, String>> readExcel(InputStream inputStream) {
         List<Map<String, String>> result = new ArrayList<>();
 
@@ -79,12 +84,24 @@ private final StudentRepository studentRepository;
             studentModel.setFirstName(student.get("First Name"));
             studentModel.setLastName(student.get("Last Name"));
             studentModel.setPhoneNumber(student.get("Phone Number"));
+            studentModel.setEmail(student.get("Email"));
             studentModel.setAddress(student.get("POB"));
             studentModel.setDateOfBirth(LocalDate.now());
             studentModel.setCreatedAt(LocalDateTime.now());
             studentModelList.add(studentModel);
         }
         return studentRepository.saveAll(studentModelList);
+    }
+    protected List<ScoreModel> createScores(InputStream inputStream){
+        List<Map<String, String>> scoreList = readExcel(inputStream);
+        List<ScoreModel> scoreModelList = new ArrayList<>();
+        for(Map<String, String> score : scoreList){
+            scoreModelList.add(new ScoreModel(
+                                                Float.parseFloat(score.get("Score")),
+                                                courseService.getCourseByCode("Course Code").data(),
+                                                studentService.getOneStudentByEmail("Email").data()));
+        }
+        return scoreRepository.saveAll(scoreModelList);
     }
 }
 

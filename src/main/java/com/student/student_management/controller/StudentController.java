@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -62,13 +63,9 @@ public class StudentController {
         return new ResponseEntity<>(response, response.httpStatus());
     }
     @PostMapping("/excel")
-    public ResponseEntity<ApiResponse<List<StudentModel>>> createStudentByUploadExcel(@Valid @RequestParam("file") MultipartFile file ) {
-        try {
+    public ResponseEntity<ApiResponse<List<StudentModel>>> createStudentByUploadExcel(@Valid @RequestParam("file") MultipartFile file ) throws IOException {
             InputStream inputStream = file.getInputStream();
             ApiResponse<List<StudentModel>> response = studentService.createStudentByUploadExcel(inputStream);
         return new ResponseEntity<>(response, response.httpStatus());
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
     }
 }
