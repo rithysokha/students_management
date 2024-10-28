@@ -3,33 +3,26 @@ package com.student.student_management.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
-@Entity(name = "course")
-@NoArgsConstructor
-public class CourseModel {
-
+@Entity(name = "student_score")
+public class ScoreModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String courseName;
-    private Float maxCredit;
-    private LocalDate effectiveFrom;
-    private LocalDate effectiveUntil;
+    @ManyToOne
+    @JoinColumn(name = "student_id", referencedColumnName = "id")
     @JsonIgnore
-    @ManyToMany(mappedBy = "courses")
-    private List<MajorModel> students;
-    @OneToMany(cascade = CascadeType.ALL)
+    private StudentModel student;
+    @ManyToOne
     @JoinColumn(name = "course_id", referencedColumnName = "id")
     @JsonIgnore
-    private List<ScoreModel> scores;
+    private CourseModel course;
+    private Float score;
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -38,11 +31,4 @@ public class CourseModel {
     private LocalDateTime updatedAt;
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
-
-    public CourseModel(LocalDate effectiveFrom, LocalDate effectiveUntil, String courseName, Float maxCredit) {
-        this.effectiveFrom = effectiveFrom;
-        this.effectiveUntil = effectiveUntil;
-        this.courseName = courseName;
-        this.maxCredit = maxCredit;
-    }
 }
