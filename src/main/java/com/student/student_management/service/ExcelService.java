@@ -48,7 +48,7 @@ private final CourseService courseService;
                 result.add(rowData);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return result;
     }
