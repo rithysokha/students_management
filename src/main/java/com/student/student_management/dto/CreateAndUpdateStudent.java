@@ -23,7 +23,9 @@ public record CreateAndUpdateStudent(
         Long classId,
         @NotBlank(message = "Phone number is required")
         @Size(min = 10, max = 12, message = "Phone number must be in range from 10 to 12 character")
-        String phoneNumber
+        String phoneNumber,
+        @NotBlank(message ="Email is required")
+        String email
 
 ) {
 }

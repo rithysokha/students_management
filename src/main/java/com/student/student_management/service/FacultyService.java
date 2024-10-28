@@ -68,10 +68,7 @@ public class FacultyService {
 
     public ApiResponse<FacultyModel> createFaculty(@Valid CreateAndUpdateFaculty body) {
         try {
-            FacultyModel facultyModel = new FacultyModel();
-            facultyModel.setFacultyName(body.facultyName());
-            var faculty = facultyRepository.save(facultyModel);
-            return new ApiResponse<>("Faculty created", faculty, HttpStatus.CREATED, Status.SUCCESS);
+            return new ApiResponse<>("Faculty created",facultyRepository.save(new FacultyModel(body.facultyName())), HttpStatus.CREATED, Status.SUCCESS);
         }catch (Exception e){
             return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
@@ -81,10 +78,7 @@ public class FacultyService {
         try {
             List<FacultyModel> createdFaculties = new ArrayList<>();
             for (CreateAndUpdateFaculty faculty : body.faculties()) {
-                FacultyModel facultyModel = new FacultyModel();
-                facultyModel.setFacultyName(faculty.facultyName());
-                facultyModel.setCreatedAt(LocalDateTime.now());
-                createdFaculties.add(facultyRepository.save(facultyModel));
+                createdFaculties.add(facultyRepository.save(new FacultyModel(faculty.facultyName())));
             }
             return new ApiResponse<>("Faculties created", createdFaculties, HttpStatus.CREATED, Status.SUCCESS);
         } catch (Exception e) {

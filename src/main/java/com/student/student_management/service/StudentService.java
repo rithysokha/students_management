@@ -43,33 +43,22 @@ public class StudentService {
             return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
     }
-    public ApiResponse<StudentModel> getOneStudentByEmail(String email) {
-        try {
-            Optional<StudentModel> studenOptional = studentRepository.findByEmail(email);
-            if (studenOptional.isPresent() && studenOptional.get().getDeletedAt() == null) {
-                return new ApiResponse<>("Student found", studenOptional.get(), HttpStatus.OK, Status.SUCCESS);
-            }
-            return new ApiResponse<>("Student not found", null, HttpStatus.NOT_FOUND, Status.FAIL);
-        } catch (RuntimeException e) {
-            return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
-        }
-    }
-
     public ApiResponse<StudentModel> createStudent(CreateAndUpdateStudent studentBody) {
         try {
             if (studentRepository.existsByPhoneNumber(studentBody.phoneNumber())) {
                 return new ApiResponse<>("Phone number already taken", null, HttpStatus.CONFLICT, Status.FAIL);
             }
-            StudentModel studentModel = new StudentModel();
             Optional<MajorModel> classOptional = majorRepository.findById(studentBody.classId());
-            studentModel.setFirstName(studentBody.firstName());
-            studentModel.setLastName(studentBody.lastName());
-            studentModel.setDateOfBirth(studentBody.dateOfBirth());
-            studentModel.setAddress(studentBody.address());
             if (classOptional.isEmpty() || classOptional.get().getDeletedAt() != null)
                 return new ApiResponse<>("Class not found", null, HttpStatus.NOT_FOUND, Status.FAIL);
-            studentModel.setStudentMajor(classOptional.get());
-            studentModel.setPhoneNumber(studentBody.phoneNumber());
+            StudentModel studentModel = new StudentModel(
+                    studentBody.firstName(),
+                    studentBody.lastName(),
+                    studentBody.dateOfBirth(),
+                    studentBody.address(),
+                    studentBody.phoneNumber(),
+                    studentBody.email(),
+                    classOptional.get());
             StudentModel response = studentRepository.save(studentModel);
             return new ApiResponse<>("Student created", response, HttpStatus.CREATED, Status.SUCCESS);
         } catch (RuntimeException e) {
