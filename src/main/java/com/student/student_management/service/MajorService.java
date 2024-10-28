@@ -45,17 +45,13 @@ public class MajorService {
 
     public ApiResponse<MajorModel> createMajor(CreateAndUpdateMajor classBody) {
         try {
-            if (majorRepository.existsByMajorName(classBody.majorName())) {
-                return new ApiResponse<>("Major name already taken", null, HttpStatus.CONFLICT, Status.FAIL);
-            }
-            MajorModel majorModel = new MajorModel();
             Optional<DepartmentModel> departmentOptional = departmentRepository.findById(classBody.departmentId());
             if (departmentOptional.isEmpty())
                 return new ApiResponse<>("Department not found", null, HttpStatus.NOT_FOUND, Status.FAIL);
-            majorModel.setDepartment(departmentOptional.get());
-            majorModel.setMajorName(classBody.majorName());
-            MajorModel response = majorRepository.save(majorModel);
-            return new ApiResponse<>("New major created", response, HttpStatus.CREATED, Status.SUCCESS);
+            if (majorRepository.existsByMajorName(classBody.majorName())) {
+                return new ApiResponse<>("Major name already taken", null, HttpStatus.CONFLICT, Status.FAIL);
+            }
+            return new ApiResponse<>("New major created", majorRepository.save(new MajorModel(classBody.majorName(),departmentOptional.get())), HttpStatus.CREATED, Status.SUCCESS);
         } catch (RuntimeException e) {
             return new ApiResponse<>(e.getMessage(), null, HttpStatus.INTERNAL_SERVER_ERROR, Status.FAIL);
         }
