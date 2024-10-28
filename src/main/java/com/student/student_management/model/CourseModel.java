@@ -30,6 +30,7 @@ public class CourseModel {
     @JoinColumn(name = "course_id", referencedColumnName = "id")
     @JsonIgnore
     private List<ScoreModel> scores;
+    private String code;
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;

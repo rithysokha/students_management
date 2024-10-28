@@ -2,7 +2,9 @@ package com.student.student_management.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -10,10 +12,13 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity(name = "student_score")
+@AllArgsConstructor
+@NoArgsConstructor
 public class ScoreModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     @JsonIgnore
@@ -31,4 +36,10 @@ public class ScoreModel {
     private LocalDateTime updatedAt;
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    public ScoreModel(Float score, CourseModel course, StudentModel student) {
+        this.score = score;
+        this.course = course;
+        this.student = student;
+    }
 }

@@ -28,6 +28,8 @@ public class StudentModel {
     private String address;
     @Column(name = "phone_number", nullable = false, unique = true, length = 12)
     private String phoneNumber;
+    @Column(name = "email", nullable = false, unique = true, length = 12)
+    private String email;
     @ManyToOne
     @JoinColumn(name = "major_id", referencedColumnName = "id")
     @JsonIgnore

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface StudentRepository extends JpaRepository<StudentModel, Long> {
@@ -15,4 +16,6 @@ public interface StudentRepository extends JpaRepository<StudentModel, Long> {
     List<StudentModel> findAllByStudentMajorDepartmentIdAndDeletedAtIsNull(Long departmentId);
 
     Boolean existsByPhoneNumber(String phoneNumber);
+
+    Optional<StudentModel> findByEmail(String email);
 }
