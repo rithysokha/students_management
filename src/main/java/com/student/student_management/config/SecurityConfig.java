@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorizeHttp -> {
                             authorizeHttp.requestMatchers("/auth/register").hasAuthority("ADMIN");
-                            authorizeHttp.requestMatchers("/auth/login", "/api/v1/greeting").permitAll();
+                            authorizeHttp.requestMatchers("/auth/login", "/api/v1/greeting","/api/v1/profiles/*","/api/v1/history").permitAll();
                             authorizeHttp.anyRequest().authenticated();
                         }
                 )
