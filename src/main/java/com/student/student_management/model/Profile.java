@@ -11,6 +11,7 @@ public class Profile {
     private int id;
     private String name;
     private String email;
+    private String dob;
     private String imgUrl;
     private String address;
     private String phone;
